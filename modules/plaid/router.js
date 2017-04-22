@@ -2,11 +2,9 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var plaid = require('plaid');
+var envvar = require('envvar');
 
-var PLAID_CLIENT_ID = '58c0c7184e95b8326832126d';
-var PLAID_SECRET = '4b456ed3e004e374ccad5464b4902a';
-var PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
-var PLAID_ENV = 'development';
+var PLAID_KEYS = require('./keys');
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
@@ -15,18 +13,23 @@ var PUBLIC_TOKEN = null;
 
 // Initialize the Plaid plaidClient
 var plaidClient = new plaid.Client(
-    PLAID_CLIENT_ID,
-    PLAID_SECRET,
-    PLAID_PUBLIC_KEY,
-    plaid.environments[PLAID_ENV]
+    PLAID_KEYS.PLAID_CLIENT_ID,
+    PLAID_KEYS.PLAID_SECRET,
+    PLAID_KEYS.PLAID_PUBLIC_KEY,
+    plaid.environments[PLAID_KEYS.PLAID_ENV]
 );
 
+router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
+router.post('/test', function(req, res) {
+  console.log('REQUEST BODY: ', req.body);
+})
+
 router.post('/authenticate_item', function(req, res, next) {
-  console.log('INITIATE AUTHENTICATION');
-  var PUBLIC_TOKEN = req.body.public_token;
-  plaidClient.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
+  var accountPublicToken = req.body.public_token;
+  plaidClient.exchangePublicToken(accountPublicToken, function(error, tokenResponse) {
+    console.log('account public token:', accountPublicToken);
     if (error != null) {
         var msg = 'Could not exchange public_token!';
         console.log(msg + '\n' + error);
