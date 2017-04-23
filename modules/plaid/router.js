@@ -19,26 +19,27 @@ var plaidClient = new plaid.Client(
     plaid.environments[PLAID_KEYS.PLAID_ENV]
 );
 
-router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
 router.post('/test', function(req, res) {
   console.log('REQUEST BODY: ', req.body);
 })
 
-router.post('/authenticate_item', function(req, res, next) {
-  var accountPublicToken = req.body.public_token;
-  plaidClient.exchangePublicToken(accountPublicToken, function(error, tokenResponse) {
-    console.log('account public token:', accountPublicToken);
-    if (error != null) {
-        var msg = 'Could not exchange public_token!';
-        console.log(msg + '\n' + error);
-        return res.json({error: msg});
-    }
-
-    var accessToken = tokenResponse.access_token;
-    console.log('Access Token: ' + accessToken);
-    plaidClient.getAuth(accessToken, function(err, authRes) {
+router.post('/get_access_token', function(request, response, next) {
+    PUBLIC_TOKEN = request.body.public_token;
+    plaidClient.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
+      console.log('PUBLIC TOKEN: ', PUBLIC_TOKEN);
+        if (error != null) {
+            var msg = 'Could not exchange public_token!';
+            console.log(error);
+            return response.json({error: msg});
+        }
+        ACCESS_TOKEN = tokenResponse.access_token;
+        console.log('Access Token: ' + ACCESS_TOKEN);
+        response.json({'error': false});
+    });
+    plaidClient.getAuth(ACCESS_TOKEN, function(err, authRes) {
       if (err != null) {
         // Handle error!
       } else {
@@ -51,7 +52,6 @@ router.post('/authenticate_item', function(req, res, next) {
         });
       }
     });
-  });
 });
 
 router.get('/accounts', function(request, response, next) {
