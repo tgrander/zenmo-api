@@ -26,7 +26,7 @@ router.post('/test', function(req, res) {
   console.log('REQUEST BODY: ', req.body);
 })
 
-router.post('/get_access_token', function(request, response, next) {
+router.post('/accessToken', function(request, response, next) {
     PUBLIC_TOKEN = request.body.public_token;
     plaidClient.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
       console.log('PUBLIC TOKEN: ', PUBLIC_TOKEN);
