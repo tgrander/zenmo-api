@@ -37,7 +37,6 @@ router.post('/accessToken', function(request, response, next) {
         }
         ACCESS_TOKEN = tokenResponse.access_token;
         console.log('Access Token: ' + ACCESS_TOKEN);
-        response.json({'error': false});
     });
     plaidClient.getAuth(ACCESS_TOKEN, function(err, authRes) {
       if (err != null) {
