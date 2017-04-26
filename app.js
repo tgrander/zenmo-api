@@ -4,6 +4,7 @@ var db = require('./db');
 
 app.get('/', function(req, res) {
   res.send('hello world');
+  console.log('werk werk werk werk werk wekr ');
 })
 
 // endpoints for all expenses-related actions
