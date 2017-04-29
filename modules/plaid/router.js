@@ -4,7 +4,21 @@ var bodyParser = require('body-parser');
 var plaid = require('plaid');
 var envvar = require('envvar');
 
-var PLAID_KEYS = require('./keys'); 
+var PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
+var PLAID_ENV = 'development';
+
+var PLAID_CLIENT_ID = null
+var PLAID_SECRET = null
+
+if (process.env.NODE_ENV === 'production') {
+  PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID
+  PLAID_SECRET = process.env.PLAID_SECRET
+
+} else if (process.env.NODE_ENV === 'development') {
+  var PLAID_KEYS = require('./keys');
+  PLAID_CLIENT_ID = PLAID_KEYS.PLAID_CLIENT_ID
+  PLAID_SECRET = PLAID_KEYS.PLAID_SECRET
+}
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
@@ -13,10 +27,10 @@ var PUBLIC_TOKEN = null;
 
 // Initialize the Plaid plaidClient
 var plaidClient = new plaid.Client(
-    PLAID_KEYS.PLAID_CLIENT_ID,
-    PLAID_KEYS.PLAID_SECRET,
-    PLAID_KEYS.PLAID_PUBLIC_KEY,
-    plaid.environments[PLAID_KEYS.PLAID_ENV]
+    PLAID_CLIENT_ID,
+    PLAID_SECRET,
+    PLAID_PUBLIC_KEY,
+    plaid.environments[PLAID_ENV]
 );
 
 router.use(bodyParser.urlencoded({ extended: true }));
