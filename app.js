@@ -18,4 +18,4 @@ app.use('/expenses', expensesRouter);
 // endpoints for all plaid-related actions
 app.use('/plaid', plaidRouter);
 
-module.exports = app;
+ export default app;
