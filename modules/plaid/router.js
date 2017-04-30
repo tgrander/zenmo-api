@@ -1,24 +1,23 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
-var plaid = require('plaid');
-var envvar = require('envvar');
-var moment = require('moment');
+import express from 'express'
+const router = express.Router();
+import bodyParser from 'body-parser'
+import plaid from 'plaid'
+import envvar from 'envvar'
+import moment from 'moment'
 
-var addTransactionsToDatabase = require('../expenses/loaders').addTransactionsToDatabase;
+import { addTransactionsToDatabase } from '../expenses/loaders'
 
-console.log(addTransactionsToDatabase);
 
-var PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
-var PLAID_ENV = 'development';
+const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
+const PLAID_ENV = 'development';
 
-var PLAID_CLIENT_ID = null
-var PLAID_SECRET = null
+let PLAID_CLIENT_ID = null
+let PLAID_SECRET = null
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
-var ACCESS_TOKEN = null;
-var PUBLIC_TOKEN = null;
+let ACCESS_TOKEN = null;
+let PUBLIC_TOKEN = null;
 
 if (process.env.NODE_ENV === 'production') {
   PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID
@@ -125,11 +124,13 @@ router.post('/transactions', function(request, response, next) {
     plaidClient.getTransactions(ACCESS_TOKEN, startDate, endDate, {
         count: 500,
         offset: 0,
-    }, function(error, transactionsResponse) {
+    }, async function(error, transactionsResponse) {
         if (error != null) {
             console.log(JSON.stringify(error));
             return response.json({error: error});
         }
+        console.log(transactionsResponse);
+        // await addTransactionsToDatabase(transactionsResponse.data.transactions)
         console.log('pulled ' + transactionsResponse.transactions.length + ' transactions');
         response.json(transactionsResponse);
     });

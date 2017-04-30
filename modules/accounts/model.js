@@ -6,4 +6,4 @@ export const Schema = new mongoose.Schema({
   }
 });
 
-modules.export = mongoose.model('Expenses', Schema);
+export default mongoose.model('Expenses', Schema);
