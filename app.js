@@ -1,6 +1,6 @@
-var express = require('express');
-var app = express();
-var db = require('./db');
+import express from 'express';
+const app = express();
+import db from './db';
 
 import expensesRouter from './modules/expenses/router'
 import plaidRouter from './modules/plaid/router'
@@ -18,4 +18,4 @@ app.use('/expenses', expensesRouter);
 // endpoints for all plaid-related actions
 app.use('/plaid', plaidRouter);
 
- export default app;
+export default app;
