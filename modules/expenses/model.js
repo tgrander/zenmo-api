@@ -23,13 +23,14 @@ export const Schema = new mongoose.Schema({
   },
   transaction_type: String,
   category: [String],
-  category_id: String,
-  {
-    timestamps: {
+  category_id: String
+},
+{
+  timestamps: {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   },
   collection: 'expenses'
 });
 
-modules.export = mongoose.model('Expenses', Schema);
+export default mongoose.model('Expenses', Schema);
