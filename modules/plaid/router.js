@@ -116,9 +116,7 @@ router.post('/item', function(request, response, next) {
 });
 
 router.post('/transactions', function(request, response, next) {
-    // Pull transactions for the Item for the last 30 days
-    console.log('TRANSACTIONS!!!');
-    var startDate = moment().subtract(12, 'months').format('YYYY-MM-DD');
+    var startDate = moment().subtract(5, 'months').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     plaidClient.getTransactions(ACCESS_TOKEN, startDate, endDate, {
         count: 500,
