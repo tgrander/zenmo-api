@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var plaid = require('plaid');
 var envvar = require('envvar');
+var moment = require('moment');
 
 var PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
 var PLAID_ENV = 'development';
@@ -10,20 +11,23 @@ var PLAID_ENV = 'development';
 var PLAID_CLIENT_ID = null
 var PLAID_SECRET = null
 
+// We store the access_token in memory - in production, store it in a secure
+// persistent data store
+var ACCESS_TOKEN = null;
+var PUBLIC_TOKEN = null;
+
 if (process.env.NODE_ENV === 'production') {
   PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID
   PLAID_SECRET = process.env.PLAID_SECRET
 
 } else if (process.env.NODE_ENV === 'development') {
   var PLAID_KEYS = require('./keys');
+
   PLAID_CLIENT_ID = PLAID_KEYS.PLAID_CLIENT_ID
   PLAID_SECRET = PLAID_KEYS.PLAID_SECRET
-}
 
-// We store the access_token in memory - in production, store it in a secure
-// persistent data store
-var ACCESS_TOKEN = null;
-var PUBLIC_TOKEN = null;
+  ACCESS_TOKEN = PLAID_KEYS.ACCESS_TOKEN
+}
 
 // Initialize the Plaid plaidClient
 var plaidClient = new plaid.Client(
@@ -36,8 +40,8 @@ var plaidClient = new plaid.Client(
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.post('/test', function(req, res) {
-  console.log('REQUEST BODY: ', req.body);
+router.post('/plaidWebhook', function(req, res) {
+
 })
 
 router.post('/accessToken', function(request, response, next) {
@@ -113,10 +117,11 @@ router.post('/item', function(request, response, next) {
 
 router.post('/transactions', function(request, response, next) {
     // Pull transactions for the Item for the last 30 days
-    var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    console.log('TRANSACTIONS!!!');
+    var startDate = moment().subtract(12, 'months').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     plaidClient.getTransactions(ACCESS_TOKEN, startDate, endDate, {
-        count: 250,
+        count: 500,
         offset: 0,
     }, function(error, transactionsResponse) {
         if (error != null) {

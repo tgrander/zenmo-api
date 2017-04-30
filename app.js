@@ -2,11 +2,13 @@ var express = require('express');
 var app = express();
 var db = require('./db');
 
+if (!process.env.NODE_ENV) {
+  throw new Error('NODE_ENV is undefined')
+}
+
 app.get('/', function(req, res) {
   res.send('hello world');
-  console.log('werk werk werk werk werk wekr ');
 })
-
 // endpoints for all expenses-related actions
 var expensesRouter = require('./modules/expenses/router');
 app.use('/expenses', expensesRouter);
