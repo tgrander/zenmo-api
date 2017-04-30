@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
   PLAID_SECRET = process.env.PLAID_SECRET
 
 } else if (process.env.NODE_ENV === 'development') {
-  var PLAID_KEYS = require('./keys');
+  const PLAID_KEYS = require('./keys');
 
   PLAID_CLIENT_ID = PLAID_KEYS.PLAID_CLIENT_ID
   PLAID_SECRET = PLAID_KEYS.PLAID_SECRET
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Initialize the Plaid plaidClient
-var plaidClient = new plaid.Client(
+const plaidClient = new plaid.Client(
     PLAID_CLIENT_ID,
     PLAID_SECRET,
     PLAID_PUBLIC_KEY,
@@ -43,13 +43,13 @@ var plaidClient = new plaid.Client(
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.post('/plaidWebhook', function(req, res) {
+router.post('/plaidWebhook', (req, res) => {
 
 })
 
-router.post('/accessToken', function(request, response, next) {
+router.post('/accessToken', (request, response, next) => {
     PUBLIC_TOKEN = request.body.public_token;
-    plaidClient.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
+    plaidClient.exchangePublicToken(PUBLIC_TOKEN, (error, tokenResponse) => {
       console.log('PUBLIC TOKEN: ', PUBLIC_TOKEN);
         if (error != null) {
             var msg = 'Could not exchange public_token!';
@@ -59,7 +59,7 @@ router.post('/accessToken', function(request, response, next) {
         ACCESS_TOKEN = tokenResponse.access_token;
         console.log('Access Token: ' + ACCESS_TOKEN);
     });
-    plaidClient.getAuth(ACCESS_TOKEN, function(err, authRes) {
+    plaidClient.getAuth(ACCESS_TOKEN, (err, authRes) => {
       if (err != null) {
         // Handle error!
       } else {
@@ -74,10 +74,10 @@ router.post('/accessToken', function(request, response, next) {
     });
 });
 
-router.get('/accounts', function(request, response, next) {
+router.get('/accounts', (request, response, next) => {
     // Retrieve high-level account information and account and routing numbers
     // for each account associated with the Item.
-    plaidClient.getAuth(ACCESS_TOKEN, function(error, authResponse) {
+    plaidClient.getAuth(ACCESS_TOKEN, (error, authResponse) => {
         if(error != null) {
             var msg = 'Unable to pull accounts from the Plaid API.';
             console.log(msg + '\n' + error);
@@ -93,17 +93,17 @@ router.get('/accounts', function(request, response, next) {
     });
 });
 
-router.post('/item', function(request, response, next) {
+router.post('/item', (request, response, next) => {
     // Pull the Item - this includes information about available products,
     // billed products, webhook information, and more.
-    plaidClient.getItem(ACCESS_TOKEN, function(error, itemResponse) {
+    plaidClient.getItem(ACCESS_TOKEN, (error, itemResponse) => {
         if (error != null) {
             console.log(JSON.stringify(error));
             return response.json({error: error});
         }
 
         // Also pull information about the institution
-        plaidClient.getInstitutionById(itemResponse.item.institution_id, function(err, instRes) {
+        plaidClient.getInstitutionById(itemResponse.item.institution_id, (err, instRes) => {
             if (err != null) {
             var msg = 'Unable to pull institution information from the Plaid API.';
             console.log(msg + '\n' + error);
@@ -118,13 +118,13 @@ router.post('/item', function(request, response, next) {
     });
 });
 
-router.post('/transactions', function(request, response, next) {
+router.post('/transactions', (request, response, next) => {
     var startDate = moment().subtract(5, 'months').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     plaidClient.getTransactions(ACCESS_TOKEN, startDate, endDate, {
         count: 500,
         offset: 0,
-    }, async function(error, transactionsResponse) {
+    }, async (error, transactionsResponse) => {
         if (error != null) {
             console.log(JSON.stringify(error));
             return response.json({error: error});
