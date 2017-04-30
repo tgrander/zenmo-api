@@ -1,7 +1,7 @@
 var flatten = require('lodash/flatten')
 var Expenses = require('./model')
 
-function addTransactionsToDatabase(transactions) {
+export function addTransactionsToDatabase(transactions) {
   // flatten transactions array
   var flattenedTransactions = flatten(transactions);
 
@@ -10,5 +10,3 @@ function addTransactionsToDatabase(transactions) {
     new Expenses(transaction).save()
   })
 }
-
-modules.export = addTransactionsToDatabase
