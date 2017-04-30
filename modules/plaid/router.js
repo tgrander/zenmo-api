@@ -5,6 +5,10 @@ var plaid = require('plaid');
 var envvar = require('envvar');
 var moment = require('moment');
 
+var addTransactionsToDatabase = require('../expenses/loaders').addTransactionsToDatabase;
+
+console.log(addTransactionsToDatabase);
+
 var PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
 var PLAID_ENV = 'development';
 
