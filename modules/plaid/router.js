@@ -1,5 +1,5 @@
 import express from 'express'
-const router = express.Router();
+let router = express.Router();
 import bodyParser from 'body-parser'
 import plaid from 'plaid'
 import envvar from 'envvar'
@@ -137,4 +137,4 @@ router.post('/transactions', (request, response, next) => {
 });
 
 
-module.exports = router;
+export default router;
