@@ -1,13 +1,15 @@
-var flatten = require('lodash/flatten')
-import Expenses from './model'
+import flatten from 'lodash/flatten';
+import Expenses from './model';
 
-export function addTransactionsToDatabase(transactions) {
+async function addTransactionsToDatabase(transactions) {
   // flatten transactions array
-  var flattenedTransactions = flatten(transactions);
-  console.log('flattenedTransactions ', flattenedTransactions);
+  const flattenedTransactions = flatten(transactions);
 
   // add each transaction to the DB
-  flattenedTransactions.forEach(function(transaction) {
-    new Expenses(transaction).save()
+  flattenedTransactions.forEach(transaction => {
+    const newTransaction = new Expenses(transaction);
+    newTransaction.save()
   })
 }
+
+export default addTransactionsToDatabase

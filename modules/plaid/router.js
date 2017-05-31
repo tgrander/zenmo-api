@@ -5,7 +5,7 @@ import plaid from 'plaid'
 import envvar from 'envvar'
 import moment from 'moment'
 
-import { addTransactionsToDatabase } from '../expenses/loaders'
+import addTransactionsToDatabase from '../expenses/loaders'
 
 
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
@@ -119,7 +119,7 @@ router.post('/item', (request, response, next) => {
 });
 
 router.post('/transactions', (request, response, next) => {
-    var startDate = moment().subtract(5, 'months').format('YYYY-MM-DD');
+    var startDate = moment().subtract(1, 'months').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     plaidClient.getTransactions(ACCESS_TOKEN, startDate, endDate, {
         count: 500,
@@ -129,8 +129,7 @@ router.post('/transactions', (request, response, next) => {
             console.log(JSON.stringify(error));
             return response.json({error: error});
         }
-        console.log(transactionsResponse);
-        // await addTransactionsToDatabase(transactionsResponse.data.transactions)
+        await addTransactionsToDatabase(transactionsResponse.transactions)
         console.log('pulled ' + transactionsResponse.transactions.length + ' transactions');
         response.json(transactionsResponse);
     });

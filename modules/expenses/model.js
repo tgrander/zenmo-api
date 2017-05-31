@@ -1,9 +1,6 @@
 var mongoose = require('mongoose');
 
 export const Schema = new mongoose.Schema({
-  _id: {
-    type: String
-  },
   account_id: String,
   transaction_id: String,
   pending: Boolean,
