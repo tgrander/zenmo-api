@@ -1,4 +1,14 @@
-var mongoose = require('mongoose');
-var databaseConfig = require('./config').databaseConfig;
+import mongoose from 'mongoose'
+import databaseConfig from './config'
 
-mongoose.connect('mongodb://localhost:27017/zenmo');
+export default function connectDatabase() {
+  return new Promise((resolve, reject) => {
+    mongoose.Promise = global.Promise;
+    mongoose.connection
+      .on('error', error => reject(error))
+      // .once('open', () => {
+      //   resolve(mongoose.connections[0]);
+      // });
+    mongoose.connect(databaseConfig);
+  });
+}

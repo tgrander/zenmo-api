@@ -7,7 +7,6 @@ import moment from 'moment'
 
 import addTransactionsToDatabase from '../expenses/loaders'
 
-
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
 const PLAID_ENV = 'development';
 
@@ -32,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
   ACCESS_TOKEN = PLAID_KEYS.ACCESS_TOKEN
 }
 
-// Initialize the Plaid plaidClient
+// Initialize the Plaid Client
 const plaidClient = new plaid.Client(
     PLAID_CLIENT_ID,
     PLAID_SECRET,
@@ -43,10 +42,15 @@ const plaidClient = new plaid.Client(
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
+/*
+* PLAID WEBHOOK - HANDLES THE RECEPTION OF NEW TRANSACTIONS FROM THE PLAID API
+*/
 router.post('/plaidWebhook', (req, res) => {
 
 })
-
+/*
+* Creates a new Plaid access token
+*/
 router.post('/accessToken', (request, response, next) => {
     PUBLIC_TOKEN = request.body.public_token;
     plaidClient.exchangePublicToken(PUBLIC_TOKEN, (error, tokenResponse) => {
