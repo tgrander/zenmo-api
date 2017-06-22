@@ -6,6 +6,15 @@ const writeTransactionToDatabase = transaction => {
   newTransaction.save()
 }
 
+async function checkIfTransactionAlreadyExists(transaction) {
+  const foundTransaction = await Expenses.find({transaction_id})
+  return foundTransaction ? true : false
+}
+
+async function addHistoricalTransactionsToDatabase() {
+  transactions
+}
+
 async function addTransactionsToDatabase(transactions) {
   // flatten transactions array
   const flattenedTransactions = flatten(transactions);

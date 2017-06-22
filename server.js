@@ -13,5 +13,5 @@ const port = process.env.PORT || 8000;
   }
 
   await app.listen(port);
-  console.log(`Server started on port ${graphqlPort}`);
+  console.log(`Server started on port ${port}`);
 })();
