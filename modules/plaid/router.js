@@ -54,13 +54,16 @@ router.post('/plaidWebhook', (req, res) => {
 router.post('/accessToken', (request, response, next) => {
     PUBLIC_TOKEN = request.body.public_token;
     plaidClient.exchangePublicToken(PUBLIC_TOKEN, (error, tokenResponse) => {
-      console.log('PUBLIC TOKEN: ', PUBLIC_TOKEN);
         if (error != null) {
             var msg = 'Could not exchange public_token!';
             console.log(error);
             return response.json({error: msg});
         }
         ACCESS_TOKEN = tokenResponse.access_token;
+        /*
+        * ADD NEW ITEM WITH ACCESS TOKEN INFORMATION HERE
+        * ADD NEW ITEM WITH ACCESS TOKEN INFORMATION HERE
+        */
         console.log('Access Token: ' + ACCESS_TOKEN);
     });
     plaidClient.getAuth(ACCESS_TOKEN, (err, authRes) => {
