@@ -1,5 +1,7 @@
-import app from './app'
-import connectDatabase from './db'
+// import app from './app'
+// import connectDatabase from './db'
+
+const app = require('./app')
 
 
 const port = process.env.PORT || 8000;
