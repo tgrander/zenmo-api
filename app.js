@@ -12,10 +12,16 @@ if (!process.env.NODE_ENV) {
 app.get('/', function(req, res) {
   res.send('hello world')
 })
+
+app.get('/add-transactions', (req, res) => {
+    res.send('new transactions will be added')
+})
+
 /*
 * EXPENSES ROUTES
 */
 app.use('/expenses', expensesRouter)
+
 /*
 * PLAID ROUTES
 */
