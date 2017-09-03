@@ -78,7 +78,7 @@ const createItem = async ({ plaidClient, publicToken, database, userId }) => {
         publicToken
     })
 
-    saveNewItem({ database, userId, accessToken })
+    return saveNewItem({ database, userId, accessToken })
 }
 
 export default createItem

@@ -2,7 +2,6 @@ import express from 'express'
 let router = express.Router()
 import bodyParser from 'body-parser'
 import plaid from 'plaid'
-import envvar from 'envvar'
 import moment from 'moment'
 import { database } from '../../firebase'
 import createItem from './utilities/createItem'
@@ -37,9 +36,7 @@ const plaidClient = new plaid.Client(
 router.use(bodyParser.urlencoded({ extended: true }))
 router.use(bodyParser.json())
 
-/*
-* PLAID WEBHOOK - HANDLES THE RECEPTION OF NEW TRANSACTIONS FROM THE PLAID API
-*/
+
 router.post('/plaid-webhook', (req, res) => {
 
     // "webhook_type": "TRANSACTIONS",
@@ -52,20 +49,58 @@ router.post('/plaid-webhook', (req, res) => {
         new_transactions
     } = req.body
 
+    let userId = null
 
+    database.ref(`/items/${item_id}`).once('value')
+        .then(item => {
+            userId = item.userId
+            return plaidClient.getTransactions(item.accessToken)
+        })
+        .then(transactions =>
+            database.ref(`/transactions/${userId}`).set(transactions)
+        )
 })
 
 
-/*
-* Creates a new Plaid access token
-*/
 router.post('/create-item', (req, res, next) => {
 
-        const publicToken = req.body.public_token
+    const publicToken = req.body.public_token
 
-        const { userId } = req.body
+    const { userId } = req.body
 
+    res.json(
         createItem({ plaidClient, publicToken, database, userId })
+    )
+})
+
+
+router.get('/transactions', (req, res, next) => {
+
+    const { accessToken } = req.body
+
+    const startDate = moment().subtract(1, 'months').format('YYYY-MM-DD')
+
+    const endDate = moment().format('YYYY-MM-DD')
+
+    plaidClient.getTransactions(
+
+        accessToken,
+        startDate,
+        endDate,
+        { count: 500, offset: 0},
+        async (error, transactionsResponse) => {
+
+            if (error != null) {
+                console.log(JSON.stringify(error))
+                return res.json({error: error})
+            }
+
+            // database.ref(`/transactions`).set(amount)
+
+            console.log('pulled ' + transactionsResponse.transactions.length + ' transactions')
+
+            res.json(transactionsResponse)
+    })
 })
 
 
@@ -116,35 +151,6 @@ router.post('/create-item', (req, res, next) => {
 //         })
 //     })
 // })
-
-router.get('/transactions', (req, res, next) => {
-
-    const { accessToken } = req.body
-
-    const startDate = moment().subtract(1, 'months').format('YYYY-MM-DD')
-
-    const endDate = moment().format('YYYY-MM-DD')
-
-    plaidClient.getTransactions(
-
-        accessToken,
-        startDate,
-        endDate,
-        { count: 500, offset: 0},
-        async (error, transactionsResponse) => {
-
-            if (error != null) {
-                console.log(JSON.stringify(error))
-                return res.json({error: error})
-            }
-
-            // database.ref(`/transactions`).set(amount)
-
-            console.log('pulled ' + transactionsResponse.transactions.length + ' transactions')
-
-            res.json(transactionsResponse)
-    })
-})
 
 
 export default router
