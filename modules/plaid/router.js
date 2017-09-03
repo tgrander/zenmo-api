@@ -24,8 +24,6 @@ if (process.env.NODE_ENV === 'production') {
 
       PLAID_CLIENT_ID = PLAID_KEYS.PLAID_CLIENT_ID
       PLAID_SECRET = PLAID_KEYS.PLAID_SECRET
-
-      ACCESS_TOKEN = PLAID_KEYS.ACCESS_TOKEN
 }
 
 // Initialize the Plaid Client
@@ -71,55 +69,57 @@ router.post('/create-item', (req, res, next) => {
 })
 
 
-router.get('/accounts', (req, res, next) => {
+// router.get('/accounts', (req, res, next) => {
+//
+//     // Retrieve high-level account information and account and routing numbers
+//     // for each account associated with the Item.
+//
+//     plaidClient.getAuth(ACCESS_TOKEN, (error, authResponse) => {
+//         if(error != null) {
+//             var msg = 'Unable to pull accounts from the Plaid API.'
+//             console.log(msg + '\n' + error)
+//             return res.json({error: msg})
+//         }
+//
+//         console.log(authResponse.accounts)
+//         res.json({
+//             error: false,
+//             accounts: authResponse.accounts,
+//             numbers: authResponse.numbers,
+//         })
+//     })
+// })
 
-    // Retrieve high-level account information and account and routing numbers
-    // for each account associated with the Item.
-
-    plaidClient.getAuth(ACCESS_TOKEN, (error, authResponse) => {
-        if(error != null) {
-            var msg = 'Unable to pull accounts from the Plaid API.'
-            console.log(msg + '\n' + error)
-            return res.json({error: msg})
-        }
-
-        console.log(authResponse.accounts)
-        res.json({
-            error: false,
-            accounts: authResponse.accounts,
-            numbers: authResponse.numbers,
-        })
-    })
-})
-
-router.post('/item', (req, res, next) => {
-
-    // Pull the Item - this includes information about available products,
-    // billed products, webhook information, and more.
-
-    plaidClient.getItem(ACCESS_TOKEN, (error, itemResponse) => {
-        if (error != null) {
-            console.log(JSON.stringify(error))
-            return res.json({error: error})
-        }
-
-        // Also pull information about the institution
-        plaidClient.getInstitutionById(itemResponse.item.institution_id, (err, instRes) => {
-            if (err != null) {
-            var msg = 'Unable to pull institution information from the Plaid API.'
-            console.log(msg + '\n' + error)
-            return res.json({error: msg})
-            } else {
-                res.json({
-                    item: itemResponse.item,
-                    institution: instRes.institution,
-                })
-            }
-        })
-    })
-})
+// router.post('/item', (req, res, next) => {
+//
+//     // Pull the Item - this includes information about available products,
+//     // billed products, webhook information, and more.
+//
+//     plaidClient.getItem(ACCESS_TOKEN, (error, itemResponse) => {
+//         if (error != null) {
+//             console.log(JSON.stringify(error))
+//             return res.json({error: error})
+//         }
+//
+//         // Also pull information about the institution
+//         plaidClient.getInstitutionById(itemResponse.item.institution_id, (err, instRes) => {
+//             if (err != null) {
+//             var msg = 'Unable to pull institution information from the Plaid API.'
+//             console.log(msg + '\n' + error)
+//             return res.json({error: msg})
+//             } else {
+//                 res.json({
+//                     item: itemResponse.item,
+//                     institution: instRes.institution,
+//                 })
+//             }
+//         })
+//     })
+// })
 
 router.get('/transactions', (req, res, next) => {
+
+    const { accessToken } = req.body
 
     const startDate = moment().subtract(1, 'months').format('YYYY-MM-DD')
 
@@ -127,7 +127,7 @@ router.get('/transactions', (req, res, next) => {
 
     plaidClient.getTransactions(
 
-        ACCESS_TOKEN,
+        accessToken,
         startDate,
         endDate,
         { count: 500, offset: 0},
