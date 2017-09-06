@@ -9,13 +9,12 @@ const exchangePublicTokenForAccessToken = ({
 
         if (error != null) {
             var msg = 'Could not exchange public_token!'
-            console.log(error)
             return response.json({error: msg})
         }
 
-        const { accessToken } = tokenResponse
+        console.log('ACCESS TOKEN: ', accessToken)
 
-        console.log('Access Token: ' + accessToken)
+        const accessToken = tokenResponse.access_token
 
         return accessToken
     }
@@ -23,15 +22,11 @@ const exchangePublicTokenForAccessToken = ({
 
 
 
-const saveNewItem = ({ database, userId, accessToken }) => {
+export const saveNewItem = async ({ database, userId, accessToken }) => {
 
-    const itemId = database.ref().child('items').push().key
+    const itemId = await database.ref(`/users/${userId}`).child('items').push().key
 
-    const newItem = {
-        userId,
-        itemId,
-        accessToken
-    }
+    const newItem = { userId, itemId, accessToken }
 
     const updates = {
 
@@ -42,9 +37,9 @@ const saveNewItem = ({ database, userId, accessToken }) => {
         [`/items/${itemId}`]: newItem
     }
 
-    database.ref().update(updates)
+    await database.ref().update(updates)
 
-    return itemId
+    return { itemId, accessToken, userId }
 }
 
 
@@ -71,14 +66,13 @@ const getItemAccounts = (plaidClient, accessToken) => {
 }
 
 
-const createItem = async ({ plaidClient, publicToken, database, userId }) => {
+export const createItem = async ({ plaidClient, publicToken, database, userId }) => {
 
     const accessToken = await exchangePublicTokenForAccessToken({
         plaidClient,
         publicToken
     })
 
+
     return saveNewItem({ database, userId, accessToken })
 }
-
-export default createItem

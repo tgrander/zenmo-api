@@ -4,13 +4,15 @@ import bodyParser from 'body-parser'
 import plaid from 'plaid'
 import moment from 'moment'
 import { database } from '../../firebase'
-import createItem from './utilities/createItem'
+import { createItem, saveNewItem } from './utilities/createItem'
 
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef'
 const PLAID_ENV = 'development'
 
 let PLAID_CLIENT_ID = null
 let PLAID_SECRET = null
+
+const accessToken = 'access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6'
 
 if (process.env.NODE_ENV === 'production') {
 
@@ -33,8 +35,8 @@ const plaidClient = new plaid.Client(
     plaid.environments[PLAID_ENV]
 )
 
+router.use(bodyParser.json()) // handle json data
 router.use(bodyParser.urlencoded({ extended: true }))
-router.use(bodyParser.json())
 
 
 router.post('/plaid-webhook', (req, res) => {
@@ -73,10 +75,19 @@ router.post('/create-item', (req, res, next) => {
     )
 })
 
+router.post('/add-item', (req, res) => {
+
+    res.json(
+        saveNewItem({
+            database,
+            userId: req.body.userId, 
+            accessToken
+        })
+    )
+})
+
 
 router.get('/transactions', (req, res, next) => {
-
-    const { accessToken } = req.body
 
     const startDate = moment().subtract(1, 'months').format('YYYY-MM-DD')
 
@@ -87,7 +98,7 @@ router.get('/transactions', (req, res, next) => {
         accessToken,
         startDate,
         endDate,
-        { count: 500, offset: 0},
+        { count: 100, offset: 0},
         async (error, transactionsResponse) => {
 
             if (error != null) {
