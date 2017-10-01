@@ -12,9 +12,9 @@ const exchangePublicTokenForAccessToken = ({
             return response.json({error: msg})
         }
 
-        console.log('ACCESS TOKEN: ', accessToken)
-
         const accessToken = tokenResponse.access_token
+
+        console.log('ACCESS TOKEN: ', accessToken)
 
         return accessToken
     }
@@ -73,6 +73,9 @@ export const createItem = async ({ plaidClient, publicToken, database, userId })
         publicToken
     })
 
+    console.log('access token res (createItem): ', accessToken)
 
-    return saveNewItem({ database, userId, accessToken })
+    const newItem = await saveNewItem({ database, userId, accessToken })
+
+    return newItem
 }
