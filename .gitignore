@@ -2,3 +2,4 @@
 .env
 db.js
 keys.js
+firestore-service-account.js

@@ -1,4 +1,11 @@
 import firebase from 'firebase'
+import admin from 'firebase-admin'
+import functions from 'firebase-functions'
+import serviceAccount from './firestore-service-account'
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+})
 
 const config = {
     apiKey: 'AIzaSyCFPewesJRgBv_Q6cYykthNipoOfCWcHb4',
@@ -12,3 +19,5 @@ const config = {
 firebase.initializeApp(config)
 
 export const database = firebase.database()
+
+export const firestore = admin.firestore()

@@ -3,6 +3,7 @@ import reduce from 'lodash/reduce'
 import flatten from 'lodash/flatten'
 import concat from 'lodash/concat'
 import getTransactions from '../utilities/getTransactions'
+import writeTransactionsToFirestore from '../utilities/writeTransactionsToDatabase'
 
 
 export default async (req, res, next) => {
@@ -15,12 +16,14 @@ export default async (req, res, next) => {
             accounts.map(async accessToken => await getTransactions({
                 plaidClient,
                 accessToken,
-                startDate: moment(dateRange[0]).format('YYYY-MM-DD'),
-                endDate: moment(dateRange[1]).format('YYYY-MM-DD')
+                // startDate: moment(dateRange[0]).format('YYYY-MM-DD'),
+                // endDate: moment(dateRange[1]).format('YYYY-MM-DD')
+                startDate: '2017-09-01',
+                endDate: '2017-09-30'
             }))
         ).then(transactionsData => {
 
-            res.locals.transactions = transactionsData.reduce((acc, curr) => {
+            const transactionData = transactionsData.reduce((acc, curr) => {
 
                 acc.accounts = acc.accounts.concat(curr.accounts)
                 acc.transactions = acc.transactions.concat(curr.transactions)
@@ -28,6 +31,10 @@ export default async (req, res, next) => {
                 return acc
 
             }, {accounts: [], transactions: []})
+
+            res.locals.transactions = transactionData
+
+            writeTransactionsToDatabase(transactionData.transactions)
 
             next()
         })

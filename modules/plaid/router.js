@@ -1,10 +1,11 @@
-import express from 'express'
-let router = express.Router()
 import bodyParser from 'body-parser'
+import express from 'express'
 import plaid from 'plaid'
-import { database } from '../../firebase'
-import { createItem, saveNewItem } from './utilities/createItem'
 import middleware from './middleware'
+import { createItem, saveNewItem } from './utilities/createItem'
+import { database } from '../../firebase'
+import { firestore } from '../../firebase'
+
 
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef'
 const PLAID_ENV = 'development'
@@ -34,6 +35,8 @@ const plaidClient = new plaid.Client(
     PLAID_PUBLIC_KEY,
     plaid.environments[PLAID_ENV]
 )
+
+let router = express.Router()
 
 router.use(bodyParser.json()) // handle json data
 router.use(bodyParser.urlencoded({ extended: true }))
