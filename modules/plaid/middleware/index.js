@@ -1,7 +1,7 @@
-import getAccounts from './getAccounts'
+import getUsersAccessTokens from './getUsersAccessTokens'
 import joinTransactions from './joinTransactions'
 
 export default {
-    getAccounts,
+    getUsersAccessTokens,
     joinTransactions
 }

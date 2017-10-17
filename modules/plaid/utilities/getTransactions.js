@@ -1,7 +1,15 @@
 import { firestore } from '../../../firebase'
 
 
-export default async ({ plaidClient, accessToken, startDate, endDate, offset=0 }) => {
+export default async ({
+
+    plaidClient,
+    accessToken,
+    startDate,
+    endDate,
+    offset=0 
+
+}) => {
 
     return await plaidClient.getTransactions(
         accessToken,

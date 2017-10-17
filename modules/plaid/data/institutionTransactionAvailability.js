@@ -2,7 +2,7 @@ export default {
 
     'ins_1': {
         name: 'bofa',
-        institution_id: ins_1,
+        institution_id: 'ins_1',
         historicalAvailability: 12 // months
     },
     'ins_5': {

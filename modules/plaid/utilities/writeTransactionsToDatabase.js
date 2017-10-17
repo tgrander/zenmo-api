@@ -3,7 +3,7 @@ import { firestore } from '../../../firebase'
 
 const transactionsRef = firestore.collection('transactions')
 
-export default transactions => {
+const writeTransactionsToDatabase = transactions => {
 
     transactions.forEach(transaction => {
 
@@ -18,7 +18,7 @@ export default transactions => {
                         return Promise.reject(`Transaction ${transaction_id} already exists`)
 
                     } else {
-                        transactionsRef.doc(transaction_id).set(t)
+                        transactionsRef.doc(transaction_id).set(transaction)
                         return Promise.resolve(`Transaction ${transaction_id} added to Firestore`)
                     }
                 })
@@ -31,3 +31,5 @@ export default transactions => {
         })
     })
 }
+
+export default writeTransactionsToDatabase

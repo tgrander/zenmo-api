@@ -2,7 +2,9 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import plaid from 'plaid'
 import middleware from './middleware'
+import moment from 'moment'
 import { createItem, saveNewItem } from './utilities/createItem'
+import getHistoricalTransactions from './utilities/getHistoricalTransactions'
 import { database } from '../../firebase'
 import { firestore } from '../../firebase'
 
@@ -99,7 +101,7 @@ router.post('/transactions', (req, res, next) => {
         next()
     },
 
-    middleware.getAccounts,
+    middleware.getUsersAccessTokens,
     middleware.joinTransactions,
 
     (req, res) => {
@@ -131,32 +133,20 @@ router.post('/accounts', async (req, res, next) => {
         })
 })
 
-// router.post('/item', (req, res, next) => {
-//
-//     // Pull the Item - this includes information about available products,
-//     // billed products, webhook information, and more.
-//
-//     plaidClient.getItem(ACCESS_TOKEN, (error, itemResponse) => {
-//         if (error != null) {
-//             console.log(JSON.stringify(error))
-//             return res.json({error: error})
-//         }
-//
-//         // Also pull information about the institution
-//         plaidClient.getInstitutionById(itemResponse.item.institution_id, (err, instRes) => {
-//             if (err != null) {
-//             var msg = 'Unable to pull institution information from the Plaid API.'
-//             console.log(msg + '\n' + error)
-//             return res.json({error: msg})
-//             } else {
-//                 res.json({
-//                     item: itemResponse.item,
-//                     institution: instRes.institution,
-//                 })
-//             }
-//         })
-//     })
-// })
+router.post('/historical-transactions', async (req, res, next) => {
 
+    getHistoricalTransactions({
+        accessToken: 'access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6',
+        institutionId: 'ins_5',
+        plaidClient
+    })
+    .then(transactions => {
+
+        console.log(`Historical transactions were successfully retrieved. Count: ${transactions.length}`)
+
+        res.send('HISTORICAL TRANSACTIONS SUCCESS!')
+    })
+    .catch(err => console.error(err))
+})
 
 export default router

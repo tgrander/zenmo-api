@@ -3,17 +3,14 @@ import getTransactions from './getTransactions'
 import writeTransactionsToDatabase from './writeTransactionsToDatabase'
 
 
-const getAllTransactionsInDateRange = async ({
-
-    allTransactions=[],
-    offset=0,
-
+const getAllTransactionsInDateRange = async (
     accessToken,
-    endDate,
     plaidClient,
-    startDate
-
-}) => {
+    startDate,
+    endDate,
+    allTransactions=[],
+    offset=0
+) => {
 
     const transactions = await getTransactions({
         plaidClient,
@@ -28,18 +25,18 @@ const getAllTransactionsInDateRange = async ({
 
     if (transactions.length < 500) {
 
-        getAllTransactionsInDateRange({
-            offet: offset + 500,
-            allTransactions: mergedTransactions,
-            startDate,
-            endDate,
-            plaidClient,
-            accessToken
-        })
+        return mergedTransactions
 
     } else {
 
-        return mergedTransactions
+        return getAllTransactionsInDateRange(
+            accessToken,
+            plaidClient,
+            startDate,
+            endDate,
+            mergedTransactions,
+            offset+ 500
+        )
     }
 }
 
