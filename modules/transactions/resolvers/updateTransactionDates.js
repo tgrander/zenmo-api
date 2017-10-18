@@ -3,7 +3,7 @@ import { firestore } from '../../../firebase'
 
 const transactionsRef = firestore.collection('transactions')
 
-transactionsRef.get()
+const transactions = transactionsRef.get()
     .then(snapshot => {
         snapshot.forEach(doc => {
             var transaction = db.runTransaction(t => {
@@ -26,3 +26,5 @@ transactionsRef.get()
     .catch(err => {
         console.log('Error getting documents', err)
     })
+
+export default transactions

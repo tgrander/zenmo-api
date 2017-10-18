@@ -3,6 +3,7 @@ import express from 'express'
 import connectDatabase from './db'
 import expensesRouter from './modules/expenses/router'
 import plaidRouter from './modules/plaid/router'
+import transactionsRouter from './modules/transactions/router'
 import { database } from './firebase'
 
 const app = express()
@@ -24,9 +25,7 @@ app.get('/add-transactions', (req, res) => {
     res.send('new transactions will be added')
 })
 
-/*
-* PLAID ROUTES
-*/
 app.use('/plaid', plaidRouter)
+app.use('/transactions', transactionsRouter)
 
 export default app
