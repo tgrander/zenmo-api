@@ -13,7 +13,10 @@ router.use(bodyParser.urlencoded({ extended: true }))
 
 router.get('/update-all-transactions-category', (req, res) => {
 
+    const { description, newCategory } = req.body
 
+    updateAllTransactionsCategory(description, newCategory)
+        .then(fulfillment => res.send(fulfillment))
 })
 
 router.post('/update-single-transaction-category', (req, res) => {
