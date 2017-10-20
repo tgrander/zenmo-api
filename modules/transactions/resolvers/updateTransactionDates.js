@@ -1,30 +1,42 @@
+import chunk from 'lodash/chunk'
 import { firestore } from '../../../firebase'
 
 
 const transactionsRef = firestore.collection('transactions')
 
-const transactions = transactionsRef.get()
-    .then(snapshot => {
-        snapshot.forEach(doc => {
-            var transaction = db.runTransaction(t => {
 
-                return t.get(transactionsRef.doc(doc.data().transaction_id))
-                    .then(doc => {
+const writeBatch = (firestore, docs, collectionRef) => {
 
-                        var newDate = new Date(doc.data().date)
-                        t.update(transactionsRef, { date: newDate })
-                    })
-            })
-            .then(result => {
-                console.log('Transaction success!')
-            })
-            .catch(err => {
-                console.log('Transaction failure:', err)
-            })
+    const batch = firestore.batch()
+
+    docs.forEach(doc => {
+
+        const documentRef = doc.data().transaction_id
+
+        const newDate = new Date(doc.data().date)
+
+        batch.update(collectionRef.doc(documentRef), { date: newDate })
+    })
+
+    return batch.commit()
+        .then(() => console.log('Update transaction dates batch successful'))
+}
+
+
+const updateTransactionDates = () => {
+
+    transactionsRef.get()
+        .then(snapshot => {
+
+            // chunk docs into lists of 500 items - Firestore only allows batches of 500 items at a time
+            const chunkedDocs = chunk(snapshot._docs(), 500)
+
+            chunkedDocs.forEach(docs => writeBatch(firestore, docs, transactionsRef))
         })
-    })
-    .catch(err => {
-        console.log('Error getting documents', err)
-    })
+        .catch(err => {
+            
+            console.log('Error getting documents', err)
+        })
+}
 
-export default transactions
+export default updateTransactionDates

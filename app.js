@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import connectDatabase from './db'
-import expensesRouter from './modules/expenses/router'
 import plaidRouter from './modules/plaid/router'
 import transactionsRouter from './modules/transactions/router'
 import { database } from './firebase'

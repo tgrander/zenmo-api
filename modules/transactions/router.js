@@ -2,7 +2,7 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { database } from '../../firebase'
 import { firestore } from '../../firebase'
-import updateTransactionsDates from './resolvers/updateTransactionsDates'
+import updateTransactionDates from './resolvers/updateTransactionDates'
 
 
 let router = express.Router()
