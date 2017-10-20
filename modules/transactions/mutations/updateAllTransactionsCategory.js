@@ -1,5 +1,4 @@
-const batch = firebase.batch()
-import { firestore } from '../../../firebase'
+import { firestore as db } from '../../../firebase'
 import transactionsRef from '../constants/transactionsRef'
 import chunkDocs from '../utilities/chunkDocs'
 
@@ -13,7 +12,7 @@ const updateAllTransactionCategories = (description, newCategory) => {
             .get()
             .then(snapshot => {
 
-                const batch = firebase.batch()
+                const batch = db.batch()
 
                 const chunkedDocs = chunkDocs(snapshot._docs())
 
@@ -30,7 +29,7 @@ const updateAllTransactionCategories = (description, newCategory) => {
                 batch.commit()
                     .then(fulfillment => {
 
-                        console.log('Category succesfully updated for all transactions'))
+                        console.log('Category succesfully updated for all transactions')
                         resolve(fulfillment)
                     }
                 )

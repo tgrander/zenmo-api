@@ -11,7 +11,7 @@ let router = express.Router()
 router.use(bodyParser.json()) // handle json data
 router.use(bodyParser.urlencoded({ extended: true }))
 
-router.get('/update-all-transactions-category', (req, res) => {
+router.post('/update-all-transactions-category', (req, res) => {
 
     const { description, newCategory } = req.body
 
