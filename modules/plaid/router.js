@@ -7,6 +7,8 @@ import { createItem, saveNewItem } from './utilities/createItem'
 import getHistoricalTransactions from './utilities/getHistoricalTransactions'
 import { database } from '../../firebase'
 import { firestore } from '../../firebase'
+import getLatestTransactions from './resolvers/getLatestTransactions'
+import writeTransactionsToDatabase from './utilities/writeTransactionsToDatabase'
 
 
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef'
@@ -66,6 +68,17 @@ router.post('/plaid-webhook', (req, res) => {
         .then(transactions =>
             database.ref(`/transactions/${userId}`).set(transactions)
         )
+})
+
+
+router.get('/latest-transactions', (req, res) => {
+
+    getLatestTransactions(plaidClient)
+        .then(transactions => {
+
+            res.send(transactions)
+            writeTransactionsToDatabase(transactions)
+        })
 })
 
 

@@ -1,7 +1,7 @@
 import { firestore } from '../../../firebase'
+import transformTransaction from '../../transactions/mutations/tranformTransaction'
+import transactionsRef from '../../transactions/constants/transactionsRef'
 
-
-const transactionsRef = firestore.collection('transactions')
 
 const writeTransactionsToDatabase = transactions => {
 
@@ -15,10 +15,14 @@ const writeTransactionsToDatabase = transactions => {
                 .then(doc => {
 
                     if (doc.exists) {
-                        return Promise.reject(`Transaction ${transaction_id} already exists`)
+                        return Promise.reject(`Transaction already exists`)
 
                     } else {
-                        transactionsRef.doc(transaction_id).set(transaction)
+
+                        const transformedTransaction = transformTransaction(transaction)
+
+                        transactionsRef.doc(transaction_id).set(transformedTransaction)
+
                         return Promise.resolve(`Transaction ${transaction_id} added to Firestore`)
                     }
                 })
