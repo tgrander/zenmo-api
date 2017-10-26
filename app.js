@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import graphqlHTTP from 'express-graphql'
+import categoriesRouter from './modules/categories/router'
 import plaidRouter from './modules/plaid/router'
 import transactionsRouter from './modules/transactions/router'
 import connectDatabase from './db'
@@ -21,6 +22,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 
+app.use('/categories', categoriesRouter)
 app.use('/plaid', plaidRouter)
 app.use('/transactions', transactionsRouter)
 
