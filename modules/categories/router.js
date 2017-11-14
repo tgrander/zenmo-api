@@ -1,21 +1,20 @@
-import bodyParser from 'body-parser'
-import express from 'express'
-import { database } from '../../firebase'
-import { firestore } from '../../firebase'
-import createCategories from './scripts/createCategories'
+import bodyParser from 'body-parser';
+import express from 'express';
+import { database } from '../../firebase';
+import { firestore } from '../../firebase';
+import createCategories from './scripts/createCategories';
 
 
-let router = express.Router()
-router.use(bodyParser.json())
-router.use(bodyParser.urlencoded({ extended: true }))
+const router = express.Router();
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 
 
 router.get('/create', (req, res) => {
-
     createCategories()
         .then(() => res.send('All Categories successfully added'))
-        .catch(err => console.error(err, 'There was a problem with createCategories function'))
-})
+        .catch(err => console.error(err, 'There was a problem with createCategories function'));
+});
 
 
-export default router
+export default router;

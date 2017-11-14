@@ -1,102 +1,122 @@
+import uuid from '../../../utilities/uuid';
+
+
 export default {
 
-    'Alcohol': {
+    Alcohol: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Bars': true,
+            Bars: true,
             'Liquor Stores': true,
-        }
+        },
     },
     'Bill Payments': {
+        categoryId: uuid(),
         type: 'payments',
         subCategories: {
-            'Credit Card': true
-        }
+            'Credit Card': true,
+        },
     },
-    'Car Service': {
+    Coffee: {
+        categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            'Car Service': true,
-            'Taxi': true
-        }
-    },
-    'Coffee': {
-        type: 'spending',
-        subCategories: {
-
-        }
+        subCategories: {},
     },
     'Eating Out': {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Restaurants': true,
-            'Lunch': true,
-            'Dinner': true,
-        }
+            Restaurants: true,
+            Lunch: true,
+            Dinner: true,
+        },
     },
-    'Entertainment': {
+    Entertainment: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
             'Concerts and Shows': true,
-            'Movies': true
-        }
+            Movies: true,
+        },
     },
-    'Groceries': {
+    Groceries: {
+        categoryId: uuid(),
         type: 'spending',
-        subCategories: {}
+        subCategories: {},
     },
-    'House/Apartment': {
+    'House and Apartment': {
         type: 'spending',
         subCategories: {
-            'Cleaning Supplies': true
-        }
+            'Cleaning Supplies': true,
+        },
     },
-    'Income': {
+    Income: {
+        categoryId: uuid(),
         type: 'income',
         subCategories: {
-            'Paychecks': true
-        }
+            Paychecks: true,
+            Deposit: true,
+        },
     },
-    'Miscellaneous': {
+    Miscellaneous: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Insurance': true,
-            'Service': true
-        }
+            Insurance: true,
+            Service: true,
+        },
     },
     'Personal Care': {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Hair': true,
-            'Spa': true
-        }
+            Hair: true,
+            Spa: true,
+        },
     },
-    'Shopping': {
+    Shopping: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
             'Beauty Products': true,
-            'Computers and Electronics': true
-        }
+            'Computers and Electronics': true,
+        },
     },
-    'Subscriptions': {
+    Subscriptions: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Music': true,
-            'Internet': true,
-            'Learning': true
-        }
+            Music: true,
+            Internet: true,
+            Learning: true,
+        },
     },
-    'Travel': {
+    Transfer: {
+        categoryId: uuid(),
+        type: 'transfer',
+        subCategories: {},
+    },
+    Transportation: {
+        categoryId: uuid(),
         type: 'spending',
         subCategories: {
-            'Airlines and Aviation Services': true,
-            'Bus and Ground Transportation': true,
-            'Train': true,
-            'Public Transportation': true
-        }
+            'Car Service': true,
+            'Public Transportation': true,
+            Taxi: true,
+        },
     },
-    'Venmo': {
+    Travel: {
+        categoryId: uuid(),
         type: 'spending',
-        subCategories: {}
+        subCategories: {
+            Airline: true,
+            Bus: true,
+            Train: true,
+        },
     },
-}
+    Venmo: {
+        type: 'spending',
+        subCategories: {},
+    },
+};
