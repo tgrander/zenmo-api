@@ -4,6 +4,7 @@ import uuid from '../../../utilities/uuid';
 export default {
 
     Alcohol: {
+        name: 'Alcohol',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -12,6 +13,7 @@ export default {
         },
     },
     'Bill Payments': {
+        name: 'Bill Payments',
         categoryId: uuid(),
         type: 'payments',
         subCategories: {
@@ -19,11 +21,13 @@ export default {
         },
     },
     Coffee: {
+        name: 'Coffee',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {},
     },
     'Eating Out': {
+        name: 'Eating Out',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -33,6 +37,7 @@ export default {
         },
     },
     Entertainment: {
+        name: 'Entertainment',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -41,17 +46,20 @@ export default {
         },
     },
     Groceries: {
+        name: 'Groceries',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {},
     },
     'House and Apartment': {
+        name: 'House and Apartment',
         type: 'spending',
         subCategories: {
             'Cleaning Supplies': true,
         },
     },
     Income: {
+        name: 'Income',
         categoryId: uuid(),
         type: 'income',
         subCategories: {
@@ -60,6 +68,7 @@ export default {
         },
     },
     Miscellaneous: {
+        name: 'Miscellaneous',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -68,6 +77,7 @@ export default {
         },
     },
     'Personal Care': {
+        name: 'Personal Care',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -76,6 +86,7 @@ export default {
         },
     },
     Shopping: {
+        name: 'Shopping',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -84,6 +95,7 @@ export default {
         },
     },
     Subscriptions: {
+        name: 'Subscriptions',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -93,11 +105,13 @@ export default {
         },
     },
     Transfer: {
+        name: 'Transfer',
         categoryId: uuid(),
         type: 'transfer',
         subCategories: {},
     },
     Transportation: {
+        name: 'Transportation',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -107,6 +121,7 @@ export default {
         },
     },
     Travel: {
+        name: 'Travel',
         categoryId: uuid(),
         type: 'spending',
         subCategories: {
@@ -116,6 +131,7 @@ export default {
         },
     },
     Venmo: {
+        name: 'Venmo',
         type: 'spending',
         subCategories: {},
     },
