@@ -12,9 +12,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.get('/create', (req, res) => {
     createCategories()
-        .then(() => res.send('All Categories successfully added'))
+        .then(() => res.status(200).send('All Categories successfully added'))
         .catch(err => console.error(err, 'There was a problem with createCategories function'));
 });
-
 
 export default router;

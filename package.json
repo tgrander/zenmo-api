@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=development nodemon --inspect server.js --exec babel-node --presets es2015,stage-2 --plugins transform-flow-strip-types"
+    "start": "NODE_ENV=development nodemon --inspect config/server.js --exec babel-node --presets es2015,stage-2 --plugins transform-flow-strip-types"
   },
   "engines": {
     "node": "8.6.0"
   },
   "author": "",
   "license": "ISC",
+  "_moduleAliases": {
+      "@root": "."
+  },
   "dependencies": {
     "body-parser": "^1.17.1",
     "envvar": "^1.1.0",
@@ -22,6 +25,7 @@
     "firebase-functions": "^0.7.1",
     "graphql": "^0.11.7",
     "lodash": "^4.17.4",
+    "module-alias": "^2.0.2",
     "moment": "^2.18.1",
     "mongoose": "^4.9.5",
     "nodemon": "^1.11.0",

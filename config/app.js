@@ -1,8 +1,8 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import categoriesRouter from './modules/categories/router';
-import plaidRouter from './modules/plaid/router';
-import transactionsRouter from './modules/transactions/router';
+import categoriesRouter from '../modules/categories/router';
+import plaidRouter from '../modules/plaid/router';
+import transactionsRouter from '../modules/transactions/router';
 
 
 const app = express();
