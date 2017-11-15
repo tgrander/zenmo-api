@@ -1,7 +1,9 @@
 import chunkDocs from '../utilities/chunkDocs';
 
 
-export default (db, transactionsRef, name, newPrimaryCategory, newSubCategory) =>
+export default ({
+    db, transactionsRef, name, newPrimaryCategory, newSubCategory,
+}) =>
     new Promise((resolve, reject) => {
         let numberOfTransactionsUpdated = 0;
 

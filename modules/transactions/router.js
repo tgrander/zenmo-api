@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import { firestore as db } from '../../firebase';
 import transactionsRef from './constants/transactionsRef';
-import updateAllTransactionCategoryByName from './mutations/updateAllTransactionsCategoryByName';
+import updateAllTransactionsCategoryByName from './mutations/updateAllTransactionsCategoryByName';
 import getTransactions from './resolvers/getTransactions';
 import mapPlaidCategoryToAssignedCategory from './mutations/mapPlaidCategoryToAssignedCategory';
 import mapTransactionNameToCategory from './mutations/mapTransactionNameToCategory';
@@ -24,17 +24,9 @@ router.post('/get', (req, res) => {
 });
 
 router.post('/update-all-categories', (req, res) => {
-    const { transaction: { name, category }, newPrimaryCategory, newSubCategory } = req.body;
+    const { transaction: { name }, newPrimaryCategory, newSubCategory } = req.body;
 
-    mapPlaidCategoryToAssignedCategory({
-        plaidCategory: category,
-        newPrimaryCategory,
-        newSubCategory,
-    });
-
-    mapTransactionNameToCategory({ name, newPrimaryCategory, newSubCategory });
-
-    updateAllTransactionCategoryByName({
+    updateAllTransactionsCategoryByName({
         db,
         transactionsRef,
         name,
@@ -47,7 +39,19 @@ router.post('/update-all-categories', (req, res) => {
 });
 
 router.post('/update-single-category', (req, res) => {
-    const { transaction: { transaction_id }, newPrimaryCategory, newSubCategory } = req.body;
+    const {
+        transaction: { transaction_id, category, name },
+        newPrimaryCategory,
+        newSubCategory,
+    } = req.body;
+
+    mapPlaidCategoryToAssignedCategory({
+        plaidCategory: category,
+        newPrimaryCategory,
+        newSubCategory,
+    });
+
+    mapTransactionNameToCategory({ name, newPrimaryCategory, newSubCategory });
 
     transactionsRef
         .doc(transaction_id)
