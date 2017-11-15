@@ -2,13 +2,13 @@ import mapTransactionNameToCategoryRef from '../constants/mapTransactionNameToCa
 
 export default ({
     name,
-    newPrimaryCategory,
-    newSubCategory,
+    primaryCategory,
+    subCategory,
 }) => {
     mapTransactionNameToCategoryRef
         .doc(name)
-        .set({ newPrimaryCategory, newSubCategory })
+        .set({ primaryCategory, subCategory })
         .then(() =>
-            console.log(`${name} mapped to Primary Category ${newPrimaryCategory} and Sub Category ${newSubCategory}`))
-        .catch(error => console.error(`There was an error while trying to map ${name} to ${newPrimaryCategory}: ${error}`));
+            console.log(`${name} mapped to Primary Category ${primaryCategory} and Sub Category ${subCategory}`))
+        .catch(error => console.error(`There was an error while trying to map ${name} to ${primaryCategory}: ${error}`));
 };
