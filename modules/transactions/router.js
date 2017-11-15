@@ -24,14 +24,18 @@ router.post('/get', (req, res) => {
 });
 
 router.post('/update-all-categories', (req, res) => {
-    const { transaction: { name }, newPrimaryCategory, newSubCategory } = req.body;
+    const { transaction: { name }, primaryCategory, subCategory } = req.body;
+
+    if (!name || !primaryCategory) {
+        res.status(500).send('Invalid request params');
+    }
 
     updateAllTransactionsCategoryByName({
         db,
         transactionsRef,
         name,
-        newPrimaryCategory,
-        newSubCategory,
+        primaryCategory,
+        subCategory,
     })
         .then(numberOfTransactionsUpdated =>
             res.status(200).send(numberOfTransactionsUpdated))
@@ -41,24 +45,25 @@ router.post('/update-all-categories', (req, res) => {
 router.post('/update-single-category', (req, res) => {
     const {
         transaction: { transaction_id, category, name },
-        newPrimaryCategory,
-        newSubCategory,
+        primaryCategory,
+        subCategory,
     } = req.body;
+
+    if (!transaction_id || !primaryCategory) {
+        res.status(500).send('Invalid request params');
+    }
 
     mapPlaidCategoryToAssignedCategory({
         plaidCategory: category,
-        newPrimaryCategory,
-        newSubCategory,
+        primaryCategory,
+        subCategory,
     });
 
-    mapTransactionNameToCategory({ name, newPrimaryCategory, newSubCategory });
+    mapTransactionNameToCategory({ name, primaryCategory, subCategory });
 
     transactionsRef
         .doc(transaction_id)
-        .update({
-            primaryCategory: newPrimaryCategory,
-            subCategory: newSubCategory,
-        })
+        .update({ primaryCategory, subCategory })
         .then(success => res.status(200).send(success))
         .catch(error => res.status(500).send(error));
 });

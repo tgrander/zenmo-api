@@ -7,132 +7,203 @@ export default {
         name: 'Alcohol',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Bars: true,
-            'Liquor Stores': true,
-        },
+        subCategories: [
+            'Bars',
+            'Liquor Stores',
+        ],
     },
-    'Bill Payments': {
-        name: 'Bill Payments',
+    'Bills & Utilities': {
+        name: 'Bills & Utilities',
         categoryId: uuid(),
         type: 'payments',
-        subCategories: {
-            'Credit Card': true,
-        },
+        subCategories: [
+            'Home Phone',
+            'Internet',
+            'Mobile Phone',
+            'Television',
+            'Utilities',
+        ],
     },
-    Coffee: {
-        name: 'Coffee',
+    'Business Services': {
+        name: 'Business Services',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {},
+        subCategories: [
+            'Advertising',
+            'Legal',
+            'Office Supplies',
+            'Printing',
+            'Shipping',
+        ],
     },
-    'Eating Out': {
-        name: 'Eating Out',
+    Education: {
+        name: 'Education',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Restaurants: true,
-            Lunch: true,
-            Dinner: true,
-        },
+        subCategories: [
+            'Books & Supplies',
+            'Student Loan',
+            'Tuition',
+        ],
     },
     Entertainment: {
         name: 'Entertainment',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            'Concerts and Shows': true,
-            Movies: true,
-        },
+        subCategories: [
+            'Amusement',
+            'Arts',
+            'Movies & DVDs',
+            'Music',
+        ],
     },
-    Groceries: {
-        name: 'Groceries',
+    'Fees & Charges': {
+        name: 'Fees & Charges',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {},
+        subCategories: [
+            'ATM Fee',
+            'Bank Fee',
+            'Finance Charge',
+            'Late Fee',
+            'Service Fee',
+        ],
     },
-    'House and Apartment': {
+    'Food & Dining': {
+        name: 'Food & Dining',
+        categoryId: uuid(),
+        type: 'spending',
+        subCategories: [
+            'Coffee Shops',
+            'Fast Food',
+            'Groceries',
+            'Restaurants',
+        ],
+    },
+    'Gifts & Donations': {
         name: 'House and Apartment',
         type: 'spending',
-        subCategories: {
-            'Cleaning Supplies': true,
-        },
+        subCategories: [
+            'Charity',
+            'Gifts',
+        ],
+    },
+    'Health & Fitness': {
+        name: 'Health & Fitness',
+        type: 'spending',
+        subCategories: [
+            'Dentist',
+            'Doctor',
+            'Eyecare',
+            'Gym',
+            'Health Insurance',
+            'Pharmacy',
+            'Sports',
+        ],
+    },
+    Home: {
+        name: 'Home',
+        type: 'spending',
+        subCategories: [
+            'Cleaning Service',
+            'Home Supplies',
+            'Furnishings',
+            'Home Insurance',
+            'Mortgage and Rent',
+        ],
     },
     Income: {
         name: 'Income',
         categoryId: uuid(),
         type: 'income',
-        subCategories: {
-            Paychecks: true,
-            Deposit: true,
-        },
+        subCategories: [
+            'Bonus',
+            'Interest Income',
+            'Paychecks',
+            'Reimbursement',
+            'Returned Purchase',
+        ],
     },
     Miscellaneous: {
         name: 'Miscellaneous',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Insurance: true,
-            Service: true,
-        },
+        subCategories: [
+            'ATM Withdrawal',
+            'Venmo',
+        ],
     },
     'Personal Care': {
         name: 'Personal Care',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Hair: true,
-            Spa: true,
-        },
+        subCategories: [
+            'Hair',
+            'Laundry',
+            'Spa & Massage',
+        ],
     },
     Shopping: {
         name: 'Shopping',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            'Beauty Products': true,
-            'Computers and Electronics': true,
-        },
+        subCategories: [
+            'Beauty Products',
+            'Books',
+            'Clothes',
+            'Electronics & Software',
+            'Hobbies',
+            'Sporting Goods',
+        ],
     },
     Subscriptions: {
         name: 'Subscriptions',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Music: true,
-            Internet: true,
-            Learning: true,
-        },
+        subCategories: [
+            'Internet Subscription',
+            'Learning Subscription',
+            'Health & Wellness Subscription',
+            'Music Subscription',
+            'Newspapers & Magazines',
+        ],
     },
     Transfer: {
         name: 'Transfer',
         categoryId: uuid(),
         type: 'transfer',
-        subCategories: {},
+        subCategories: [
+            'Credit Card Payment',
+            'Transfer to Checkings',
+            'Transfer to Savings',
+        ],
     },
     Transportation: {
         name: 'Transportation',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            'Car Service': true,
-            'Public Transportation': true,
-            Taxi: true,
-        },
+        subCategories: [
+            'Auto Insurance',
+            'Auto Payment',
+            'Car Service',
+            'Gas & Fuel',
+            'Parking',
+            'Public Transportation',
+            'Service & Parts',
+            'Taxi',
+        ],
     },
     Travel: {
         name: 'Travel',
         categoryId: uuid(),
         type: 'spending',
-        subCategories: {
-            Airline: true,
-            Bus: true,
-            Train: true,
-        },
-    },
-    Venmo: {
-        name: 'Venmo',
-        type: 'spending',
-        subCategories: {},
+        subCategories: [
+            'Air Travel',
+            'Bus Travel',
+            'Train Travel',
+            'Hotel & Lodging',
+            'Rental Car',
+            'Vacation',
+        ],
     },
 };

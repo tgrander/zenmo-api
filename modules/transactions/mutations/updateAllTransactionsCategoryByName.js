@@ -2,10 +2,14 @@ import chunkDocs from '../utilities/chunkDocs';
 
 
 export default ({
-    db, transactionsRef, name, newPrimaryCategory, newSubCategory,
+    db, transactionsRef, name, primaryCategory, subCategory,
 }) =>
     new Promise((resolve, reject) => {
         let numberOfTransactionsUpdated = 0;
+
+        if (!name) {
+            resolve('Transaction has no name');
+        }
 
         transactionsRef
             .where('name', '==', name)
@@ -21,8 +25,8 @@ export default ({
                     const { transaction_id } = doc.data();
 
                     batch.update(transactionsRef.doc(transaction_id), {
-                        primaryCategory: newPrimaryCategory,
-                        subCategory: newSubCategory,
+                        primaryCategory,
+                        subCategory,
                     });
                 }));
 
