@@ -1,4 +1,5 @@
 import mapTransactionNameToCategoryRef from '../constants/mapTransactionNameToCategory';
+import uuid from '../../../utilities/uuid';
 
 export default ({
     name,
@@ -6,8 +7,8 @@ export default ({
     subCategory,
 }) => {
     mapTransactionNameToCategoryRef
-        .doc(name)
-        .set({ primaryCategory, subCategory })
+        .doc(uuid())
+        .set({ name, primaryCategory, subCategory })
         .then(() =>
             console.log(`${name} mapped to Primary Category ${primaryCategory} and Sub Category ${subCategory}`))
         .catch(error => console.error(`There was an error while trying to map ${name} to ${primaryCategory}: ${error}`));

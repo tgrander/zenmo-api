@@ -37,9 +37,12 @@ router.post('/update-all-categories', (req, res) => {
         primaryCategory,
         subCategory,
     })
-        .then(numberOfTransactionsUpdated =>
-            res.status(200).send(numberOfTransactionsUpdated))
-        .catch(error => res.status(500).send(error));
+        .then((numberOfTransactionsUpdated) => {
+            res.status(200).send({ numberOfTransactionsUpdated });
+        })
+        .catch((error) => {
+            res.status(500).send(error);
+        });
 });
 
 router.post('/update-single-category', (req, res) => {
