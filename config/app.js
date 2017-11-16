@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import accountsRouter from '../modules/accounts/router';
 import categoriesRouter from '../modules/categories/router';
 import plaidRouter from '../modules/plaid/router';
 import transactionsRouter from '../modules/transactions/router';
@@ -16,6 +17,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/accounts', accountsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/plaid', plaidRouter);
 app.use('/transactions', transactionsRouter);
