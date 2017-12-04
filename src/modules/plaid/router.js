@@ -1,38 +1,14 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import plaid from 'plaid';
+import { database } from '../../../firebase';
 import { createItem, saveNewItem } from './middleware/createItem';
 import getHistoricalTransactions from './middleware/getHistoricalTransactions';
-import { database } from '../../../firebase';
 import getLatestTransactions from './middleware/getLatestTransactions';
 import writeTransactionsToDatabase from './middleware/writeTransactionsToDatabase';
+import plaidClient from './plaidClient';
 
-
-const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
-const PLAID_ENV = 'development';
-
-let PLAID_CLIENT_ID = null;
-let PLAID_SECRET = null;
 
 const accessToken = 'access-development-43abb18f-5f6c-40c6-b069-28433fe1ab67';
-
-if (process.env.NODE_ENV === 'production') {
-    PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
-    PLAID_SECRET = process.env.PLAID_SECRET;
-} else if (process.env.NODE_ENV === 'development') {
-    const PLAID_KEYS = require('./keys');
-
-    PLAID_CLIENT_ID = PLAID_KEYS.PLAID_CLIENT_ID;
-    PLAID_SECRET = PLAID_KEYS.PLAID_SECRET;
-}
-
-// Initialize the Plaid Client
-const plaidClient = new plaid.Client(
-    PLAID_CLIENT_ID,
-    PLAID_SECRET,
-    PLAID_PUBLIC_KEY,
-    plaid.environments[PLAID_ENV],
-);
 
 const router = express.Router();
 
