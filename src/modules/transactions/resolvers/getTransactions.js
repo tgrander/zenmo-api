@@ -13,7 +13,6 @@ const getTransactions = (dateRange = {}) => {
             .get()
             .then((snapshot) => {
                 const transactions = snapshot._docs().map(doc => doc.data());
-
                 return resolve(transactions);
             })
             .catch(err => reject(err));

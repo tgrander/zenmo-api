@@ -42,30 +42,7 @@ const router = express.Router();
 router.use(bodyParser.json()); // handle json data
 router.use(bodyParser.urlencoded({ extended: true }));
 
-
-router.post('/plaid-webhook', (req, res) => {
-    // "webhook_type": "TRANSACTIONS",
-    // "webhook_code": "INITIAL_UPDATE" or "HISTORICAL_UPDATE",
-
-    const {
-        webhook_type,
-        webhook_code,
-        item_id,
-        new_transactions,
-    } = req.body;
-
-    let userId = null;
-
-    database.ref(`/items/${item_id}`).once('value')
-        .then((item) => {
-            userId = item.userId;
-            return plaidClient.getTransactions(item.accessToken);
-        })
-        .then(transactions =>
-            database.ref(`/transactions/${userId}`).set(transactions));
-});
-
-
+// FETCH USER'S LATEST TRANSACTIONS FROM PLAID API
 router.get('/latest-transactions', (req, res) => {
     getLatestTransactions(plaidClient)
         .then((transactions) => {
@@ -74,8 +51,8 @@ router.get('/latest-transactions', (req, res) => {
         });
 });
 
-
-router.post('/create-item', (req, res, next) => {
+// CREATE NEW PLAID ITEM AND SAVE TO DB
+router.post('/create-item', (req, res) => {
     const publicToken = req.body.public_token;
 
     const { userId } = req.body;
@@ -93,7 +70,7 @@ router.post('/add-item', (req, res) => {
     }));
 });
 
-
+// FETCH ALL TRANSACTIONS FROM PLAID API
 router.post(
     '/transactions', (req, res, next) => {
         res.locals.userId = 'I76zn2yehnepunkWQB44EFuCpUm1';
@@ -111,28 +88,8 @@ router.post(
     },
 );
 
-
-router.post('/accounts', async (req, res, next) => {
-    // Retrieve high-level account information and account and routing numbers
-    // for each account associated with the Item.
-
-    const ACCESS_TOKEN = 'access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6';
-
-    plaidClient.getAuth(ACCESS_TOKEN)
-        .then(res => res.json({
-
-            error: false,
-            accounts: res.accounts,
-            numbers: res.numbers,
-        }))
-        .catch((err) => {
-            const msg = 'Unable to pull accounts from the Plaid API.';
-            console.log(`${msg}\n${err}`);
-            return res.json({ error: msg });
-        });
-});
-
-router.post('/historical-transactions', async (req, res, next) => {
+// FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS PLAID API WILL ALLOW
+router.post('/historical-transactions', async (req, res) => {
     getHistoricalTransactions({
         accessToken: 'access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6',
         institutionId: 'ins_5',
