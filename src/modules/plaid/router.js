@@ -1,14 +1,11 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import plaid from 'plaid';
-import middleware from './middleware';
-import moment from 'moment';
-import { createItem, saveNewItem } from './utilities/createItem';
-import getHistoricalTransactions from './utilities/getHistoricalTransactions';
-import { database } from '../../firebase';
-import { firestore } from '../../firebase';
-import getLatestTransactions from './resolvers/getLatestTransactions';
-import writeTransactionsToDatabase from './utilities/writeTransactionsToDatabase';
+import { createItem, saveNewItem } from './middleware/createItem';
+import getHistoricalTransactions from './middleware/getHistoricalTransactions';
+import { database } from '../../../firebase';
+import getLatestTransactions from './middleware/getLatestTransactions';
+import writeTransactionsToDatabase from './middleware/writeTransactionsToDatabase';
 
 
 const PLAID_PUBLIC_KEY = 'b41ccce2d4bf2d77e8b21c4ff67fef';
@@ -43,50 +40,33 @@ router.use(bodyParser.json()); // handle json data
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // FETCH USER'S LATEST TRANSACTIONS FROM PLAID API
-router.get('/latest-transactions', (req, res) => {
-    getLatestTransactions(plaidClient)
+router.get('/transactions', (req, res) => {
+    getLatestTransactions(plaidClient, req.body.accessTokens)
         .then((transactions) => {
-            res.send(transactions);
+            res.status(200).send(transactions);
             writeTransactionsToDatabase(transactions);
         });
 });
 
-// CREATE NEW PLAID ITEM AND SAVE TO DB
-router.post('/create-item', (req, res) => {
+// CREATE NEW ITEM BY EXCHANGING PUBLIC TOKEN
+router.post('/public-token', (req, res) => {
     const publicToken = req.body.public_token;
 
     const { userId } = req.body;
 
-    res.json(createItem({
+    res.status(201).send(createItem({
         plaidClient, publicToken, database, userId,
     }));
 });
 
-router.post('/add-item', (req, res) => {
-    res.json(saveNewItem({
+// SAVE ACCESS TOKEN DIRECTLY TO DB
+router.post('/access-token', (req, res) => {
+    res.status(201).send(saveNewItem({
         database,
         userId: req.body.userId,
         accessToken,
     }));
 });
-
-// FETCH ALL TRANSACTIONS FROM PLAID API
-router.post(
-    '/transactions', (req, res, next) => {
-        res.locals.userId = 'I76zn2yehnepunkWQB44EFuCpUm1';
-        res.locals.plaidClient = plaidClient;
-        res.locals.dateRange = req.body.dateRange;
-
-        next();
-    },
-
-    middleware.getUsersAccessTokens,
-    middleware.joinTransactions,
-
-    (req, res) => {
-        res.json({ transactions: res.locals.transactions });
-    },
-);
 
 // FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS PLAID API WILL ALLOW
 router.post('/historical-transactions', async (req, res) => {

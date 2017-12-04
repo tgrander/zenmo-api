@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { firestore as db } from '../../firebase';
+import { firestore as db } from '../../../firebase';
 import transactionsRef from './constants/transactionsRef';
 import updateAllTransactionsCategoryByName from './mutations/updateAllTransactionsCategoryByName';
 import getTransactions from './resolvers/getTransactions';

@@ -1,7 +1,5 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { database } from '../../firebase';
-import { firestore } from '../../firebase';
 import createCategories from './scripts/createCategories';
 
 

@@ -1,3 +1,3 @@
-import { firestore } from '../../../firebase'
+import { firestore } from '../../../../firebase';
 
-export default firestore.collection('transactions')
+export default firestore.collection('transactions');
