@@ -1,6 +1,7 @@
 import moment from 'moment';
 import getCurrentMonth from '../../../utilities/getCurrentMonth';
 import plaidTransactionsResponseVO from './plaidTransactionsResponseVO';
+import writeTransactionsToDatabase from './writeTransactionsToDatabase';
 
 
 export default async (plaidClient, accessTokens = []) => {
@@ -13,7 +14,7 @@ export default async (plaidClient, accessTokens = []) => {
 
         const { transactions } = plaidTransactionsResponseVO(plaidResponse);
 
-        return transactions;
+        return await writeTransactionsToDatabase(transactions);
     } catch (error) {
         throw new Error(error);
     }

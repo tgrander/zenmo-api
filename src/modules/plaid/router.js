@@ -3,7 +3,6 @@ import express from 'express';
 import createItem from './middleware/createItem';
 import getHistoricalTransactions from './middleware/getHistoricalTransactions';
 import getLatestTransactions from './middleware/getLatestTransactions';
-import writeTransactionsToDatabase from './middleware/writeTransactionsToDatabase';
 import plaidClient from './plaidClient';
 import { usersRef } from '../../databaseRefs';
 
@@ -16,10 +15,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 // FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
 router.get('/transactions', (req, res) => {
     getLatestTransactions(plaidClient, req.body.accessTokens)
-        .then((transactions) => {
-            res.status(204);
-            writeTransactionsToDatabase(transactions);
-        });
+        .then(() => res.status(204))
+        .catch(error => res.status(500).send(error));
 });
 
 // CREATE NEW ITEM BY EXCHANGING PUBLIC TOKEN
@@ -31,7 +28,7 @@ router.post('/item', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-// FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS PLAID API WILL ALLOW
+// FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS INSTITUTION WILL ALLOW
 router.post('/historical-transactions', async (req, res) => {
     getHistoricalTransactions({
         accessToken: 'access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6',
