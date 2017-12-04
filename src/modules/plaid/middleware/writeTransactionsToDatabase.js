@@ -8,19 +8,23 @@ export default async (transactions) => {
         const { transaction_id } = transaction;
 
         try {
-            const doc = await firestore.runTransaction(db => db.get(transactionsRef.doc(transaction_id))
+            await firestore.runTransaction(async (db) => {
+                const transactionsDocRef = transactionsRef.doc(transaction_id);
 
-            if (doc.exists) {
-                return Promise.reject(new Error('Transaction already exists'));
-            }
+                const doc = await db.get(transactionsDocRef);
 
-            const transformedTransaction = transformTransaction(transaction);
+                if (doc.exists) {
+                    return Promise.reject(new Error('Transaction already exists'));
+                }
 
-            transactionsRef.doc(transaction_id).set(transformedTransaction);
+                const transformedTransaction = transformTransaction(transaction);
+
+                return db.update(transactionsDocRef, transformedTransaction);
+            });
 
             return Promise.resolve(`Transaction ${transaction_id} added to Firestore`);
         } catch (error) {
-          throw new Error(error)
+            return Promise.reject(error);
         }
     });
 };
