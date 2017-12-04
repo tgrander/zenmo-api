@@ -1,47 +1,34 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { database } from '../../../firebase';
-import { createItem, saveNewItem } from './middleware/createItem';
+import createItem from './middleware/createItem';
 import getHistoricalTransactions from './middleware/getHistoricalTransactions';
 import getLatestTransactions from './middleware/getLatestTransactions';
 import writeTransactionsToDatabase from './middleware/writeTransactionsToDatabase';
 import plaidClient from './plaidClient';
+import { usersRef } from '../../databaseRefs';
 
-
-const accessToken = 'access-development-43abb18f-5f6c-40c6-b069-28433fe1ab67';
 
 const router = express.Router();
 
 router.use(bodyParser.json()); // handle json data
 router.use(bodyParser.urlencoded({ extended: true }));
 
-// FETCH USER'S LATEST TRANSACTIONS FROM PLAID API
+// FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
 router.get('/transactions', (req, res) => {
     getLatestTransactions(plaidClient, req.body.accessTokens)
         .then((transactions) => {
-            res.status(200).send(transactions);
+            res.status(204);
             writeTransactionsToDatabase(transactions);
         });
 });
 
 // CREATE NEW ITEM BY EXCHANGING PUBLIC TOKEN
-router.post('/public-token', (req, res) => {
-    const publicToken = req.body.public_token;
+router.post('/item', (req, res) => {
+    const { userId, publicToken } = req.body;
 
-    const { userId } = req.body;
-
-    res.status(201).send(createItem({
-        plaidClient, publicToken, database, userId,
-    }));
-});
-
-// SAVE ACCESS TOKEN DIRECTLY TO DB
-router.post('/access-token', (req, res) => {
-    res.status(201).send(saveNewItem({
-        database,
-        userId: req.body.userId,
-        accessToken,
-    }));
+    createItem(plaidClient, publicToken, usersRef, userId)
+        .then(() => res.status(201))
+        .catch(err => res.status(500).send(err));
 });
 
 // FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS PLAID API WILL ALLOW
