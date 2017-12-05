@@ -2,10 +2,10 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import { firestore as db } from '../../../firebase';
 import { transactionsRef } from '../../databaseRefs';
-import updateAllTransactionsCategoryByName from './mutations/updateAllTransactionsCategoryByName';
-import getTransactions from './resolvers/getTransactions';
-import mapPlaidCategoryToAssignedCategory from './mutations/mapPlaidCategoryToAssignedCategory';
-import mapTransactionNameToCategory from './mutations/mapTransactionNameToCategory';
+import updateAllTransactionsCategoryByName from './middleware/updateAllTransactionsCategoryByName';
+import getTransactions from './middleware/getTransactions';
+import mapPlaidCategoryToAssignedCategory from './middleware/mapPlaidCategoryToAssignedCategory';
+import mapTransactionNameToCategory from './middleware/mapTransactionNameToCategory';
 
 
 const router = express.Router();
