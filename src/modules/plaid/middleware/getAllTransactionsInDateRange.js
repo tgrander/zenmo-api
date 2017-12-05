@@ -1,6 +1,4 @@
-import institutionTransactionAvailability from '../data/institutionTransactionAvailability';
 import getTransactions from './getTransactions';
-import writeTransactionsToDatabase from './writeTransactionsToDatabase';
 
 
 const getAllTransactionsInDateRange = async (
