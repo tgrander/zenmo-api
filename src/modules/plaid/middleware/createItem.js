@@ -1,3 +1,5 @@
+import getHistoricalTransactions from './getHistoricalTransactions';
+
 const exchangePublicTokenForAccessToken = async (plaidClient, publicToken) => {
     try {
         const { access_token } = await plaidClient.exchangePublicToken(publicToken);
@@ -10,9 +12,8 @@ const exchangePublicTokenForAccessToken = async (plaidClient, publicToken) => {
 // SAVE ACCESS TOKEN
 const saveAccessToken = async (usersRef, userId, accessToken) => {
     try {
-        const response = await usersRef.doc(userId)
-            .update({ accessTokens: [accessToken] }, { merge: true });
-        return response;
+        await usersRef.doc(userId).update({ accessTokens: [accessToken] }, { merge: true });
+        return;
     } catch (error) {
         throw new Error(error);
     }
@@ -22,7 +23,8 @@ const saveAccessToken = async (usersRef, userId, accessToken) => {
 export default async (plaidClient, publicToken, usersRef, userId) => {
     try {
         const accessToken = await exchangePublicTokenForAccessToken(plaidClient, publicToken);
-        return await saveAccessToken(usersRef, userId, accessToken);
+        await saveAccessToken(usersRef, userId, accessToken);
+        return { accessToken, userId };
     } catch (error) {
         throw new Error(error);
     }
