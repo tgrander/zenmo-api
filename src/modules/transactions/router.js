@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { firestore as db } from '../../../firebase';
-import transactionsRef from './constants/transactionsRef';
+import { transactionsRef } from '../../databaseRefs';
 import updateAllTransactionsCategoryByName from './mutations/updateAllTransactionsCategoryByName';
 import getTransactions from './resolvers/getTransactions';
 import mapPlaidCategoryToAssignedCategory from './mutations/mapPlaidCategoryToAssignedCategory';
@@ -14,7 +14,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 
 router.post('/get', (req, res) => {
-    const { userId, dateRange, filters } = req.body;
+    const { dateRange } = req.body;
 
     getTransactions(dateRange)
         .then((docs) => {
