@@ -1,4 +1,4 @@
-import mapTransactionNameToCategoryRef from '../constants/mapTransactionNameToCategory';
+import { mapTransactionNameToCategoryRef } from '../../../databaseRefs';
 import uuid from '../../../utilities/uuid';
 
 export default ({

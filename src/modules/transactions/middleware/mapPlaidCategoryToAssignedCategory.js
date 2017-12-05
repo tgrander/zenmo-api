@@ -1,4 +1,4 @@
-import mapPlaidCategoryToAssignedCategoryRef from '../constants/mapPlaidCategoryToAssignedCategory';
+import { mapPlaidCategoryToAssignedCategoryRef } from '../../../databaseRefs';
 
 export default ({
     plaidCategory,

@@ -1,6 +1,6 @@
 import { firestore } from '../../../../firebase';
 import { transactionsRef } from '../../../databaseRefs';
-import transformTransaction from '../../transactions/mutations/tranformTransaction';
+import transformTransaction from '../../../helpers/tranformTransaction';
 
 
 export default async (transactions) => {

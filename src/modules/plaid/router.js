@@ -1,10 +1,10 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import { usersRef } from '../../databaseRefs';
 import createItem from './middleware/createItem';
 import getHistoricalTransactions from './middleware/getHistoricalTransactions';
 import getLatestTransactions from './middleware/getLatestTransactions';
 import plaidClient from './plaidClient';
-import { usersRef } from '../../databaseRefs';
 
 
 const router = express.Router();

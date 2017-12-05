@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import transactionsRef from '../constants/transactionsRef';
+import { transactionsRef } from '../../../databaseRefs';
 import getCurrentMonth from '../../../utilities/getCurrentMonth';
 
 
