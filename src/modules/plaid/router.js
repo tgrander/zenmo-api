@@ -1,9 +1,9 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { usersRef } from '../../databaseRefs';
-import createItem from './middleware/createItem';
-import getHistoricalTransactions from './middleware/getHistoricalTransactions';
-import getLatestTransactions from './middleware/getLatestTransactions';
+import createItem from './helpers/createItem';
+import getHistoricalTransactions from './helpers/getHistoricalTransactions';
+import getLatestTransactions from './helpers/getLatestTransactions';
 import plaidClient from './plaidClient';
 
 
@@ -23,20 +23,11 @@ router.post('/item', (req, res) => {
     const { userId, publicToken } = req.body;
 
     createItem(plaidClient, publicToken, usersRef, userId)
-        .then(({ accessToken, userId }) => {
-            res.status(201).sned('success');
-            getHistoricalTransactions(accessToken);
+        .then((accessToken) => {
+            res.status(201).send('success');
+            getHistoricalTransactions(accessToken, plaidClient, userId);
         })
         .catch(err => res.status(500).send(err));
-});
-
-router.post('/accounts', (req, res) => {
-    plaidClient.getAccounts('access-development-62c4c9a8-fa5b-4eaf-9cd4-8e7cf7b1eec6')
-        .then((accounts) => {
-            let a;
-            res.status(200).send(accounts);
-        })
-        .catch(error => res.status(500).send(error));
 });
 
 // FETCH ALL USER TRANSACTIONS AS FAR BACK IN TIME AS INSTITUTION WILL ALLOW
