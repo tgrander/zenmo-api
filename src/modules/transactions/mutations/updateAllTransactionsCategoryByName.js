@@ -1,4 +1,4 @@
-import chunkDocs from '../utilities/chunkDocs';
+import chunkDocs from '../../../utilities/chunkDocs';
 
 
 export default ({
