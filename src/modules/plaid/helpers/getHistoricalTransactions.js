@@ -12,26 +12,30 @@ import writeTransactionsToDatabase from './writeTransactionsToDatabase';
    * @return {object} transactions
    */
 const getHistoricalTransactions = async (accessToken, plaidClient, userId) => {
-    const accounts = await plaidClient.getAccounts(accessToken);
+    try {
+        const accounts = await plaidClient.getAccounts(accessToken);
 
-    const { institution_id } = accounts.item;
+        const { institution_id } = accounts.item;
 
-    const { historicalAvailability } = institutionTransactionAvailability[institution_id];
+        const { historicalAvailability } = institutionTransactionAvailability[institution_id];
 
-    const startDate = moment().subtract(historicalAvailability, 'months').format('YYYY-MM-DD');
+        const startDate = moment().subtract(historicalAvailability, 'months').format('YYYY-MM-DD');
 
-    const endDate = moment().format('YYYY-MM-DD');
+        const endDate = moment().format('YYYY-MM-DD');
 
-    const transactions = await getAllTransactionsInDateRange(
-        accessToken,
-        plaidClient,
-        startDate,
-        endDate,
-    );
+        const transactions = await getAllTransactionsInDateRange(
+            accessToken,
+            plaidClient,
+            startDate,
+            endDate,
+        );
 
-    writeTransactionsToDatabase(transactions, userId);
+        writeTransactionsToDatabase(transactions, userId);
 
-    return transactions;
+        return transactions;
+    } catch (e) {
+        throw new Error(e);
+    }
 };
 
 export default getHistoricalTransactions;

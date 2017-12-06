@@ -1,5 +1,5 @@
 import { firestore } from '../../../../firebase';
-import refs from '../../../databaseRefs';
+import { transactionsRef } from '../../../databaseRefs';
 import transformTransaction from '../../../helpers/tranformTransaction';
 
 
@@ -15,7 +15,7 @@ export default (transactions, userId) => {
         const { transaction_id } = transaction;
 
         return firestore.runTransaction(async (db) => {
-            const transactionsDocRef = refs.transactionsRef.doc(transaction_id);
+            const transactionsDocRef = transactionsRef.doc(transaction_id);
 
             try {
                 const doc = await db.get(transactionsDocRef);

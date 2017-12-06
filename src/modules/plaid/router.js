@@ -13,7 +13,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
 router.post('/transactions', async (req, res) => {
-    const accessTokens = req.body.accessTokens || ['access-development-43abb18f-5f6c-40c6-b069-28433fe1ab67'];
+    const { accessTokens } = req.body;
 
     getLatestTransactions(plaidClient, accessTokens)
         .then(transactions => res.send(transactions))
@@ -27,6 +27,8 @@ router.post('/item', (req, res) => {
     createItem(plaidClient, publicToken, usersRef, userId)
         .then((accessToken) => {
             res.sendStatus(201);
+            // after item created, historical transactions for item are
+            // fetched in the background
             getHistoricalTransactions(accessToken, plaidClient, userId);
         })
         .catch(err => res.status(500).send(err));
@@ -38,10 +40,10 @@ router.post('/historical-transactions', async (req, res) => {
 
     getHistoricalTransactions(accessToken, plaidClient, userId)
         .then((transactions) => {
-            console.log(`Historical transactions retrieved. Count: ${transactions.length}`);
             res.send(transactions);
+            console.log(`${transactions.length} historical transactions retrieved`);
         })
-        .catch(err => console.error(err));
+        .catch(err => res.status(500).send(err));
 });
 
 export default router;

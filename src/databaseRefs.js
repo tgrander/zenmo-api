@@ -1,11 +1,8 @@
 import { firestore } from '../firebase';
 
-
-export default {
-    accountsRef: firestore.collection('transactions'),
-    categoriesRef: firestore.collection('transactions'),
-    mapPlaidCategoryToAssignedCategoryRef: firestore.collection('map-plaid-category-to-assigned-category'),
-    mapTransactionNameToCategoryRef: firestore.collection('map-transaction-name-to-category'),
-    transactionsRef: firestore.collection('transactions'),
-    usersRef: firestore.collection('users'),
-};
+export const accountsRef = firestore.collection('transactions');
+export const categoriesRef = firestore.collection('transactions');
+export const mapPlaidCategoryToAssignedCategoryRef = firestore.collection('map-plaid-category-to-assigned-category');
+export const mapTransactionNameToCategoryRef = firestore.collection('map-transaction-name-to-category');
+export const transactionsRef = firestore.collection('transactions');
+export const usersRef = firestore.collection('users');
