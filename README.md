@@ -3,7 +3,7 @@ Money Made Easy. :relieved: :money_with_wings:
 ## Development
 #### Requirements
 - [Node.js](https://nodejs.org/en/download/) v7.6+ for async/await support
-- [npm]
+- [npm](https://www.npmjs.com/)
 
 #### Installation
 Install dependencies `npm install`
@@ -23,7 +23,7 @@ Install dependencies `npm install`
 #### Code style
 
 ```
-$ npm lint
+$ eslint --init
 ```
 
 [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
