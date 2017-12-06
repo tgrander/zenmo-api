@@ -18,7 +18,7 @@ Install dependencies `npm install`
 | `POST /transactions/get`                 | get transactions            |
 | `POST /plaid/transactions`               | recent transactions         |
 | `POST /plaid/item`                       | create item                 |
-| `POST /plaid/historical-transactions`    | get historical transactions |
+| `POST /plaid/historical-transactions`    | get historical transactions for an item |
 
 #### Code style
 
