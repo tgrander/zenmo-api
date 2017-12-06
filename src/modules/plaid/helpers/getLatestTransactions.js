@@ -3,7 +3,13 @@ import getCurrentMonth from '../../../utilities/getCurrentMonth';
 import plaidTransactionsResponseVO from './plaidTransactionsResponseVO';
 import writeTransactionsToDatabase from './writeTransactionsToDatabase';
 
-
+/**
+   * Retrieve recently added transaction data from Plaid API
+   *
+   * @param  {object} plaidClient access Plaid API functions
+   * @param  {array} accessTokens all access tokens of user
+   * @return {array} transactions
+   */
 export default async (plaidClient, accessTokens = []) => {
     const startDate = moment(getCurrentMonth().startDate).format('YYYY-MM-DD');
     const endDate = moment().format('YYYY-MM-DD');
@@ -14,8 +20,10 @@ export default async (plaidClient, accessTokens = []) => {
 
         const { transactions } = plaidTransactionsResponseVO(plaidResponse);
 
-        return await writeTransactionsToDatabase(transactions);
+        writeTransactionsToDatabase(transactions);
+
+        return transactions;
     } catch (error) {
-        throw new Error(error);
+        return new Error(error);
     }
 };

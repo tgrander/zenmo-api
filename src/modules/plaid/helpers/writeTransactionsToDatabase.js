@@ -1,26 +1,37 @@
 import { firestore } from '../../../../firebase';
-import { transactionsRef } from '../../../databaseRefs';
+import refs from '../../../databaseRefs';
 import transformTransaction from '../../../helpers/tranformTransaction';
 
 
-export default async (transactions, userId) => {
+/**
+   * Retrieve recently added transaction data from Plaid API
+   *
+   * @param  {array} transactions transactions to add to Firestore
+   * @param  {string} userId unique id of user who transactions belong to
+   * @return {undefined}
+   */
+export default (transactions, userId) => {
     transactions.forEach((transaction) => {
         const { transaction_id } = transaction;
 
-        firestore.runTransaction(async (db) => {
-            const transactionsDocRef = transactionsRef.doc(transaction_id);
+        return firestore.runTransaction(async (db) => {
+            const transactionsDocRef = refs.transactionsRef.doc(transaction_id);
 
-            const doc = await db.get(transactionsDocRef);
+            try {
+                const doc = await db.get(transactionsDocRef);
 
-            if (doc.exists) {
-                return Promise.reject(new Error('Transaction already exists'));
+                if (doc.exists) {
+                    return Promise.reject(new Error('Transaction already exists'));
+                }
+
+                const transformedTransaction = transformTransaction(transaction, userId);
+
+                return transactionsDocRef.set(transformedTransaction);
+            } catch (e) {
+                return Promise.reject(e);
             }
-
-            const transformedTransaction = transformTransaction(transaction, userId);
-
-            return db.update(transactionsDocRef, transformedTransaction);
-        });
-
-        return Promise.resolve(`Transaction ${transaction_id} added to Firestore`);
+        })
+            .then(() => Promise.resolve(`Transaction ${transaction_id} added to Firestore`))
+            .catch(e => Promise.reject(e));
     });
 };

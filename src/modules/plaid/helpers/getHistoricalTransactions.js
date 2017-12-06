@@ -12,7 +12,7 @@ import writeTransactionsToDatabase from './writeTransactionsToDatabase';
    * @return {object} transactions
    */
 const getHistoricalTransactions = async (accessToken, plaidClient, userId) => {
-    const { accounts } = await plaidClient.getAccounts(accessToken);
+    const accounts = await plaidClient.getAccounts(accessToken);
 
     const { institution_id } = accounts.item;
 

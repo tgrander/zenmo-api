@@ -12,10 +12,12 @@ router.use(bodyParser.json()); // handle json data
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
-router.get('/transactions', (req, res) => {
-    getLatestTransactions(plaidClient, req.body.accessTokens)
-        .then(() => res.status(204))
-        .catch(error => res.status(500).send(error));
+router.post('/transactions', async (req, res) => {
+    const accessTokens = req.body.accessTokens || ['access-development-43abb18f-5f6c-40c6-b069-28433fe1ab67'];
+
+    getLatestTransactions(plaidClient, accessTokens)
+        .then(transactions => res.send(transactions))
+        .catch(e => res.send(e));
 });
 
 // CREATE NEW ITEM BY EXCHANGING PUBLIC TOKEN
@@ -24,7 +26,7 @@ router.post('/item', (req, res) => {
 
     createItem(plaidClient, publicToken, usersRef, userId)
         .then((accessToken) => {
-            res.status(201).send('success');
+            res.sendStatus(201);
             getHistoricalTransactions(accessToken, plaidClient, userId);
         })
         .catch(err => res.status(500).send(err));
@@ -36,9 +38,8 @@ router.post('/historical-transactions', async (req, res) => {
 
     getHistoricalTransactions(accessToken, plaidClient, userId)
         .then((transactions) => {
-            console.log(`Historical transactions were successfully retrieved. Count: ${transactions.length}`);
-
-            res.send('HISTORICAL TRANSACTIONS SUCCESS!');
+            console.log(`Historical transactions retrieved. Count: ${transactions.length}`);
+            res.send(transactions);
         })
         .catch(err => console.error(err));
 });
