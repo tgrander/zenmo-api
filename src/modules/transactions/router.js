@@ -60,6 +60,8 @@ router.post('/update-single-category', (req, res) => {
         plaidCategory: category,
         primaryCategory,
         subCategory,
+        transactionId: transaction_id,
+        name,
     });
 
     mapTransactionNameToCategory({ name, primaryCategory, subCategory });
