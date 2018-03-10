@@ -1,10 +1,10 @@
 import reduce from 'lodash/reduce';
 
-
-// Transform raw Plaid transaction into Firestore transaction model
 export default (transaction, userId) => ({
     ...transaction,
-    category: reduce(transaction.category, (acc, curr) => ({ ...acc, [curr]: true }), {}),
+    category: null,
     date: new Date(transaction.date),
+    plaidCategories: reduce(transaction.category, (acc, curr) => ({ ...acc, [curr]: true }), {}),
+    type: null,
     userId,
 });

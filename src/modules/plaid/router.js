@@ -6,15 +6,17 @@ import getHistoricalTransactions from './helpers/getHistoricalTransactions';
 import getLatestTransactions from './helpers/getLatestTransactions';
 import plaidClient from './plaidClient';
 
-
 const router = express.Router();
-router.use(bodyParser.json()); // handle json data
+router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-// FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
-router.post('/transactions', async (req, res) => {
-    const { accessTokens } = req.body;
+router.get('/', (req, res) => {
 
+});
+
+// FETCH USER'S LATEST TRANSACTIONS FROM PLAID API AND ADD THEM TO DB
+router.post('/recent-transactions', async (req, res) => {
+    const { accessTokens } = req.body;
     getLatestTransactions(plaidClient, accessTokens)
         .then(transactions => res.send(transactions))
         .catch(e => res.send(e));

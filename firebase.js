@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 import admin from 'firebase-admin';
-import functions from 'firebase-functions';
 import serviceAccount from './firestore-service-account';
 
 admin.initializeApp({

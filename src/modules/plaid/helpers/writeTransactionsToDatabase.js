@@ -1,7 +1,6 @@
-import { firestore } from '../../../../firebase';
 import { transactionsRef } from '../../../databaseRefs';
 import transformTransaction from '../../../helpers/tranformTransaction';
-
+import intelligentlyCategorizeTransaction from '../../transactions/helpers/intelligentlyCategorizeTransaction';
 
 /**
    * Retrieve recently added transaction data from Plaid API
@@ -10,28 +9,35 @@ import transformTransaction from '../../../helpers/tranformTransaction';
    * @param  {string} userId unique id of user who transactions belong to
    * @return {undefined}
    */
-export default (transactions, userId) => {
-    transactions.forEach((transaction) => {
-        const { transaction_id } = transaction;
+export default (transactions, userId) => new Promise((resolve, reject) => {
+    let numberOfTransactionsAdded = 0;
+    let transactionsProcessed = 0;
+    transactions.forEach(async (transaction) => {
+        transactionsProcessed += 1;
 
-        return firestore.runTransaction(async (db) => {
-            const transactionsDocRef = transactionsRef.doc(transaction_id);
+        const { name, category, transaction_id } = transaction;
+        const transactionsDocRef = transactionsRef.doc(transaction_id);
 
-            try {
-                const doc = await db.get(transactionsDocRef);
+        try {
+            const doc = await transactionsDocRef.get();
 
-                if (doc.exists) {
-                    return Promise.reject(new Error('Transaction already exists'));
-                }
-
-                const transformedTransaction = transformTransaction(transaction, userId);
-
-                return transactionsDocRef.set(transformedTransaction);
-            } catch (e) {
-                return Promise.reject(e);
+            if (!doc.exists) {
+                const transformedTransaction = transformTransaction(
+                    transaction,
+                    userId,
+                );
+                transactionsDocRef.set(transformedTransaction);
+                numberOfTransactionsAdded += 1;
             }
-        })
-            .then(() => Promise.resolve(`Transaction ${transaction_id} added to Firestore`))
-            .catch(e => Promise.reject(e));
+
+            if (transactions.length === transactionsProcessed) {
+                return resolve(`
+                  ${numberOfTransactionsAdded} transactions added to database \n
+                  ${transactions.length} total transactions
+                `);
+            }
+        } catch (e) {
+            return reject(e);
+        }
     });
-};
+});

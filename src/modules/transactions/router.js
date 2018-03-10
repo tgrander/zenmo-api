@@ -1,12 +1,18 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { firestore as db } from '../../../firebase';
-import { transactionsRef } from '../../databaseRefs';
+import {
+    transactionsRef,
+    mapEntirePlaidCategory,
+    mapIndividualPlaidCategory,
+    mapPayee,
+} from '../../databaseRefs';
 import updateAllTransactionsCategoryByName from './helpers/updateAllTransactionsCategoryByName';
 import getTransactions from './helpers/getTransactions';
-import mapPlaidCategoryToAssignedCategory from './helpers/mapPlaidCategoryToAssignedCategory';
-import mapTransactionNameToCategory from './helpers/mapTransactionNameToCategory';
+import writeTransactionsToDatabase from '../plaid/helpers/writeTransactionsToDatabase';
+import convertPlaidCategoriesToString from '../../utilities/convertPlaidCategoriesToString';
 
+import mapCategoryToTransactionInfo from './helpers/mapCategoryToTransactionInfo';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -45,32 +51,64 @@ router.post('/update-all-categories', (req, res) => {
         });
 });
 
-router.post('/update-single-category', (req, res) => {
+router.post('/categorize', (req, res) => {
     const {
-        transaction: { transaction_id, category, name },
-        primaryCategory,
-        subCategory,
+        transaction: { transaction_id, plaidCategories, name },
+        category,
+        type,
     } = req.body;
 
-    if (!transaction_id || !primaryCategory) {
-        res.status(500).send('Invalid request params');
+    const plaidCategoriesString = convertPlaidCategoriesToString(plaidCategories);
+
+    if (plaidCategoriesString) {
+        mapCategoryToTransactionInfo({
+            category,
+            collectionRef: mapEntirePlaidCategory,
+            docRef: plaidCategoriesString,
+            payee: name,
+            type,
+        });
     }
 
-    mapPlaidCategoryToAssignedCategory({
-        plaidCategory: category,
-        primaryCategory,
-        subCategory,
-        transactionId: transaction_id,
-        name,
-    });
+    if (plaidCategories && plaidCategories.length) {
+        plaidCategories.forEach((plaidCategory) => {
+            mapCategoryToTransactionInfo({
+                category,
+                collectionRef: mapIndividualPlaidCategory,
+                docRef: plaidCategory,
+                payee: name,
+                type,
+            });
+        });
+    }
 
-    mapTransactionNameToCategory({ name, primaryCategory, subCategory });
+    if (name) {
+        mapCategoryToTransactionInfo({
+            category,
+            collectionRef: mapPayee,
+            docRef: name,
+            payee: name,
+            type,
+        });
+    }
 
     transactionsRef
         .doc(transaction_id)
-        .update({ primaryCategory, subCategory })
+        .update({ category, type })
         .then(success => res.status(200).send(success))
         .catch(error => res.status(500).send(error));
+});
+
+router.get('/test', async (req, res) => {
+    const userId = 'I76zn2yehnepunkWQB44EFuCpUm1';
+    const transactions = mockTransactions;
+
+    writeTransactionsToDatabase(transactions, userId)
+        .then(r => res.send(r).status(200))
+        .catch((err) => {
+            console.error(err);
+            res.sendStatus(500);
+        });
 });
 
 
