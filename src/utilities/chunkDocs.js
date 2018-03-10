@@ -1,3 +1,3 @@
 import chunk from 'lodash/chunk';
 
-export default docs => chunk(docs, 500);
+export default (docs, chunkSize = 500) => chunk(docs, chunkSize);
